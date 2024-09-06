@@ -29,18 +29,14 @@ const axios = require('axios');
 Cypress.Commands.add('googleAuth', () => {
     cy.log('Authenticating with Google...');
 
-    const clientId = Cypress.env('googleClientId');
-    const clientSecret = Cypress.env('googleClientSecret');
-    const refreshToken = Cypress.env('googleRefreshToken');
-
     // First request to Google OAuth to get access_token and id_token
     cy.request({
         method: 'POST',
         url: 'https://oauth2.googleapis.com/token',
         body: {
-            client_id: clientId,
-            client_secret: clientSecret,
-            refresh_token: refreshToken,
+            client_id: Cypress.env('googleClientId'),
+            client_secret: Cypress.env('googleClientSecret'),
+            refresh_token: Cypress.env('googleRefreshToken'),
             grant_type: 'refresh_token'
         }
     }).then(({ body }) => {
