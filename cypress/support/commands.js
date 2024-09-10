@@ -52,8 +52,8 @@ Cypress.Commands.add('googleAuth', () => {
             headers: {
                Authorization: `Bearer ${access_token}`,
                 'Content-Type': 'application/json',
-                Origin:'https://meta4-dev.srv.festcloud.ai/',
-                Referer: 'https://meta4-dev.srv.festcloud.ai/',
+                Origin: Cypress.env('linkDev'),
+                Referer: Cypress.env('linkDev'),
             },
             body: {
                 id_token: id_token

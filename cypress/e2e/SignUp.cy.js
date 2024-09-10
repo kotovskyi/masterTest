@@ -21,12 +21,12 @@ describe('Google Authentication', () => {
                             };
                             const sso_refresh_token = Cypress.env("googleRefreshToken")
                             const ssoUser = {
-                                id: "103220392861419762719",
-                                email: "maksym.kotovskyi@festcloud.ai",
+                                id: Cypress.env('userId'),
+                                email: Cypress.env('userEmail'),
                                 verified_email: true,
-                                name: "Maksym Kotovskyi",
-                                given_name: "Maksym",
-                                family_name: "Kotovskyi",
+                                name: Cypress.env('userName'),
+                                given_name: Cypress.env('givenName'),
+                                family_name: Cypress.env('familyName'),
                                 picture: "https://lh3.googleusercontent.com/a/ACg8ocKXmEluwzCZoqs-z9fL0B5ESLPKuAxI9dRXWdBgZGajZd-r8Ro=s96-c",
                                 hd: "festcloud.ai"
                             };
