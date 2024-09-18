@@ -6,9 +6,9 @@ describe('Database Query Tests', () => {
     before(() => {
         googleLogin()
     })
-        it('should fetch user data from the database', () => {
+        it('Search an employee by employee table.', () => {
             let searchItem = '%andrushko%'
-            const searchItememail = "dmytro.andrushko@festcloud.ai"
+            const searchItemEmail = "dmytro.andrushko@festcloud.ai"
 
             cy.fixture('querries.json').then((data) => {
                 const {uniqUserByName} = data;
@@ -16,10 +16,41 @@ describe('Database Query Tests', () => {
                     requestToDb.graphql(Cypress.env('linkHasuraDev'), 'uniq_user_by_name', uniqUserByName, searchItem, token).then((response) => {
                         cy.log(JSON.stringify(response.body));
                         const email = response.body.data.assignment_unique_assignment[0].WorkEmail;
-                        expect(searchItememail).to.eq(email)
-
+                        expect(searchItemEmail).to.eq(email)
                     });
                 })
             });
         })
+    it('Profile page - shows email and phone from the employee table.', () => {
+        const profileEmail = "maksym.kotovskyi@festcloud.ai"
+        const profilePhone = "444444444444"
+
+        cy.get('@bearerToken').then((token) => {
+            requestToDb.profileData(Cypress.env('linkHasuraDev'), profileEmail, token).then((response) => {
+                cy.log(JSON.stringify(response.body));
+                const email = response.body.data.assignment_actual_employee_assignment[0].employee.WorkEmail;
+                const phone = response.body.data.assignment_actual_employee_assignment[0].employee.WorkMobilePhone;
+
+                expect(profileEmail).to.eq(email)
+                expect(profilePhone).to.eq(phone)
+
+            })
+        });
+    })
+    it.only('Mesh widgets - shows email and phone from the employee table.', () => {
+        const profileEmail = "maksym.kotovskyi@festcloud.ai"
+        const profilePhone = "444444444444"
+
+        cy.get('@bearerToken').then((token) => {
+            requestToDb.profileData(Cypress.env('linkHasuraDev'), profileEmail, token).then((response) => {
+                cy.log(JSON.stringify(response.body));
+                const email = response.body.data.assignment_actual_employee_assignment[0].employee.WorkEmail;
+                const phone = response.body.data.assignment_actual_employee_assignment[0].employee.WorkMobilePhone;
+
+                expect(profileEmail).to.eq(email)
+                expect(profilePhone).to.eq(phone)
+
+            })
+        });
+    })
 })
