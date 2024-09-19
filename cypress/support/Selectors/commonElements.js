@@ -5,13 +5,17 @@ export const Header = {
     userPosition: '[data-cy="header-user-position"]'
 };
 
+export  const blackArea = {
+    blackArea: '.react-joyride__overlay'
+}
 export const NavigationBar = {
     widgetsLink: '[data-cy="nav-widgets-link"]',
     profileLink: '[data-cy="nav-profile-link"]',
     teamLink: '[data-cy="nav-team-link"]',
     feedbackLink: '[data-cy="nav-feedback-link"]',
     privacyPolicyLink: '[data-cy="nav-privacy-policy-link"]',
-    aboutUsLink: '[data-cy="nav-about-us-link"]'
+    aboutUsLink: '[data-cy="nav-about-us-link"]',
+    slideBtn: '[data-cy="nav-expand"]'
 };
 
 export const GlobalSearch = {
@@ -22,6 +26,7 @@ export const GlobalSearch = {
 };
 
 export const Onboarding = {
+    modal:'[data-cy="onboarding-modal"]',
     title: '[data-cy="onboarding-mesh-title"]',
     text: '[data-cy="onboarding-mesh-text"]',
     stepCount: '[data-cy="onboarding-step-count"]',
@@ -29,9 +34,12 @@ export const Onboarding = {
     backButton: '[data-cy="onboarding-back-btn"]',
     profileText:'[data-cy="onboarding-profile-text"]',
     profileTitle:'[data-cy="onboarding-profile-title"]',
+    meshText: '[data-cy="onboarding-mesh-text"]',
     teamText:'[data-cy="onboarding-team-text"]',
-    teamTitle:'[data-cy="onboarding-team-title"]'
-
+    teamTitle:'[data-cy="onboarding-team-title"]',
+    startBtn: '[data-cy="onboarding-start-btn"]',
+    nextBtn: '[data-cy="onboarding-next-btn"]',
+    finishBtn: '[data-cy="onboarding-end-btn"]'
 };
 
 export const SignInPage = {
