@@ -1,7 +1,14 @@
 import {googleLogin} from "../support/login";
 import requestToDb from "../support/DbRequests/hasura_requests";
-import {Onboarding, blackArea, NavigationBar, GlobalSearch, Header} from "../support/Selectors/commonElements";
-import {NavigationText, onboardingTexts} from "../support/consts/onboardingTexts";
+import {
+    Onboarding,
+    blackArea,
+    NavigationBar,
+    GlobalSearch,
+    Header,
+    ProfilePage, TeamPage
+} from "../support/Selectors/commonElements";
+import {FullPageText, NavigationText, onboardingTexts, OrgchartText} from "../support/consts/onboardingTexts";
 import {HeaderIconText} from "../support/consts/meshPageTexts";
 
 describe('Onboarding tests', () => {
@@ -332,7 +339,7 @@ describe('Onboarding tests', () => {
         cy.get(blackArea.blackArea)
             .should('not.exist')
     });
-    it('Verify 7th step modal window and "Skip" button for Mesh onboarding', () => {
+    it('Verify 7th step modal window and "Done" button for Mesh onboarding', () => {
         // Assert the overlay is visible and has the correct class
         cy.get(blackArea.blackArea)
             .should('be.visible')
@@ -544,7 +551,7 @@ describe('Onboarding tests', () => {
             .should('not.exist')
 
     });
-    it('Verify the passed onboarding after relogin', () => {
+    it('Verify the passed Mesh onboarding after relogin', () => {
         // Assert the overlay is visible and has the correct class
         cy.get(blackArea.blackArea)
             .should('be.visible')
@@ -626,5 +633,380 @@ describe('Onboarding tests', () => {
 
     });
 
+    it('Verify 1st modal window and "Skip" button for Profile onboarding', () => {
+        cy.visit( '/people/my-profile');
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        // Check that the modal window is still visible after clicking the overlay
+        cy.get(Onboarding.modal).should("be.visible")
+        //Verify modal text
+        cy.get(Onboarding.profileText).eq(0).should("have.text", FullPageText.festProfileTitle)
+        cy.get(Onboarding.profileText).eq(1).should("have.text", FullPageText.profileStart0)
+        cy.get(Onboarding.profileText).eq(2).should("have.text", FullPageText.profileStart1)
+        cy.get(Onboarding.stepCount).should("have.text", "1/4")
+        //Verify buttons
+        cy.get(Onboarding.startBtn).should("have.text", NavigationText.startBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)')
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn).click()
+        cy.get(Onboarding.modal).should("not.exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+
+    });
+    it('Verify 2nd modal window and "Skip" button for Profile onboarding', () => {
+        cy.visit( '/people/my-profile');
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        // Check that the modal window is still visible after clicking the overlay
+        cy.get(Onboarding.modal).should("be.visible")
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.startBtn).should("have.text", NavigationText.startBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        cy.get(Onboarding.modal).should("be.visible")
+
+        // Ensure the modal window is positioned near the target element
+        cy.get(GlobalSearch.searchInput).then(($element) => {
+            const elementPosition = $element[0].getBoundingClientRect();
+
+            cy.get(Onboarding.modal).then(($modal) => {
+                const modalPosition = $modal[0].getBoundingClientRect();
+
+                // Check that the modal is positioned close to the target element
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(330);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(432);
+            });
+        });
+
+        cy.get(Onboarding.profileTitle).should("have.text", FullPageText.aboutUserTitle)
+        cy.get(Onboarding.profileText).should("have.text", FullPageText.aboutUser)
+        cy.get(Onboarding.stepCount).should("have.text", "2/4")
+
+        //Verify buttons
+        cy.get(Onboarding.nextBtn).should("have.text", NavigationText.nextBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)')
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn).click()
+        cy.get(Onboarding.modal).should("not.exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+    });
+    it('Verify 3rd modal window and "Skip" button for Profile onboarding', () => {
+        cy.visit( '/people/my-profile');
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        // Check that the modal window is still visible after clicking the overlay
+        cy.get(Onboarding.modal).should("be.visible")
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.startBtn).should("have.text", NavigationText.startBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        cy.get(Onboarding.modal).should("be.visible")
+
+        // Ensure the modal window is positioned near the target element
+        cy.get(GlobalSearch.searchInput).then(($element) => {
+            const elementPosition = $element[0].getBoundingClientRect();
+
+            cy.get(Onboarding.modal).then(($modal) => {
+                const modalPosition = $modal[0].getBoundingClientRect();
+
+                // Check that the modal is positioned close to the target element
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(330);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(432);
+            });
+        });
+
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.nextBtn).should("have.text", NavigationText.nextBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        cy.get(Onboarding.modal).should("exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('exist')
+
+        cy.get(Onboarding.teamTitle).should("have.text", FullPageText.teamTitle)
+        cy.get(Onboarding.teamText).should("have.text", FullPageText.teamSection)
+        cy.get(Onboarding.stepCount).should("have.text", "3/4")
+
+        //Verify buttons
+        cy.get(Onboarding.nextBtn).should("have.text", NavigationText.nextBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)')
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn).click()
+        cy.get(Onboarding.modal).should("not.exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+    });
+    it('Verify 4th step modal window and "Done" button for Profile onboarding', () => {
+        cy.visit( '/people/my-profile');
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        // Check that the modal window is still visible after clicking the overlay
+        cy.get(Onboarding.modal).should("be.visible")
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.startBtn).should("have.text", NavigationText.startBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        cy.get(Onboarding.modal).should("be.visible")
+
+        // Ensure the modal window is positioned near the target element
+        cy.get(GlobalSearch.searchInput).then(($element) => {
+            const elementPosition = $element[0].getBoundingClientRect();
+
+            cy.get(Onboarding.modal).then(($modal) => {
+                const modalPosition = $modal[0].getBoundingClientRect();
+
+                // Check that the modal is positioned close to the target element
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(330);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(432);
+            });
+        });
+
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.nextBtn).should("have.text", NavigationText.nextBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        cy.get(Onboarding.modal).should("exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('exist')
+
+        //Verify buttons
+        cy.get(Onboarding.stepCount).should("have.text", "3/4")
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.nextBtn).should("have.text", NavigationText.nextBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        cy.get(Onboarding.modal).should("exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('exist')
+        cy.get(Onboarding.profileTitle).should("have.text", FullPageText.positionTitle)
+        cy.get(Onboarding.profileText).should("have.text", FullPageText.positionSection)
+        cy.get(Onboarding.stepCount).should("have.text", "4/4")
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("not.exist")
+        cy.get(Onboarding.finishBtn).should("have.text", NavigationText.finishBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        cy.get(Onboarding.modal).should("not.exist")
+
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+    });
+    it('Return on Profile page after Finished Mesh onboarding', () => {
+        cy.visit( '/people/my-profile');
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        // Check that the modal window is still visible after clicking the overlay
+        cy.get(Onboarding.modal).should("be.visible")
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.wait(500)
+        cy.get(Onboarding.startBtn).should("have.text", NavigationText.startBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        cy.get(Onboarding.modal).should("be.visible")
+
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.nextBtn).should("have.text", NavigationText.nextBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+
+        cy.get(Onboarding.modal).should("be.visible")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('exist')
+
+        //Verify buttons
+        cy.get(Onboarding.stepCount).should("have.text", "3/4")
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.nextBtn).should("have.text", NavigationText.nextBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        cy.get(Onboarding.modal).should("exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('exist')
+        cy.get(Onboarding.profileTitle).should("have.text", FullPageText.positionTitle)
+        cy.get(Onboarding.profileText).should("have.text", FullPageText.positionSection)
+        cy.get(Onboarding.stepCount).should("have.text", "4/4")
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("not.exist")
+        cy.get(Onboarding.finishBtn).should("have.text", NavigationText.finishBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        cy.get(Onboarding.modal).should("not.exist")
+
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+
+        cy.get(NavigationBar.widgetsLink).click()
+        cy.url().should('include', '/mesh');
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn).click()
+
+
+        cy.get(NavigationBar.profileLink).click()
+        cy.url().should('include', '/people/my-profile');
+
+        cy.get(Onboarding.modal).should("not.exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+
+    });
+
+    it('Verify 1st modal window and "Skip" button for Orgchart onboarding', () => {
+        cy.visit( '/people/team');
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        // Check that the modal window is still visible after clicking the overlay
+        cy.get(Onboarding.modal).should("be.visible")
+        // Ensure the modal window is positioned near the target element
+
+            cy.get(Onboarding.modal).then(($modal) => {
+                const modalPosition = $modal[0].getBoundingClientRect();
+
+                // Check that the modal is positioned close to the target element
+                expect(modalPosition.top ).to.eq(234.3359375);
+                expect(modalPosition.left ).to.eq(680);
+            });
+
+        //Verify modal text
+        cy.get(Onboarding.teamText).eq(0).should("have.text", OrgchartText.orgchartTitle)
+        cy.get(Onboarding.teamText).eq(1).should("have.text", OrgchartText.orgchartStart0)
+        cy.get(Onboarding.teamText).eq(2).should("have.text", OrgchartText.orgchartStart1)
+        cy.get(Onboarding.stepCount).should("have.text", "1/2")
+        //Verify buttons
+        cy.get(Onboarding.startBtn).should("have.text", NavigationText.startBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)')
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn).click()
+        cy.get(Onboarding.modal).should("not.exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+
+    });
+    it('Verify 2nd modal window and "Skip" button for Orgchart onboarding', () => {
+        cy.visit( '/people/team');
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        // Check that the modal window is still visible after clicking the overlay
+        cy.get(Onboarding.modal).should("be.visible")
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.startBtn).should("have.text", NavigationText.startBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        cy.get(Onboarding.modal).should("be.visible")
+
+        // Ensure the modal window is positioned near the target element
+        cy.get(GlobalSearch.searchInput).then(($element) => {
+            const elementPosition = $element[0].getBoundingClientRect();
+
+            cy.get(Onboarding.modal).then(($modal) => {
+                const modalPosition = $modal[0].getBoundingClientRect();
+
+                // Check that the modal is positioned close to the target element
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(129);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(237);
+            });
+        });
+
+        cy.get(Onboarding.teamTitle).should("have.text", OrgchartText.filterTitle)
+        cy.get(Onboarding.teamText).should("have.text", OrgchartText.filters)
+        cy.get(Onboarding.stepCount).should("have.text", "2/2")
+
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("not.exist")
+        cy.get(Onboarding.finishBtn).should("have.text", NavigationText.finishBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        cy.get(Onboarding.modal).should("not.exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+    });
+    it('Verify the passed Orgchart onboarding after relogin', () => {
+        cy.visit( '/people/team');
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        // Check that the modal window is still visible after clicking the overlay
+        cy.get(Onboarding.modal).should("be.visible")
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn)
+        cy.get(Onboarding.startBtn).should("have.text", NavigationText.startBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('be.visible')
+            .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.4)');
+        // Try to click on the overlay (outside the modal) and assert that no action occurs
+        cy.get(blackArea.blackArea).click({force: true});
+        cy.get(Onboarding.modal).should("be.visible")
+
+        //Verify buttons
+        cy.get(Onboarding.skipButton).should("not.exist")
+        cy.get(Onboarding.finishBtn).should("have.text", NavigationText.finishBtn).should('have.css', 'background-color', 'rgb(58, 119, 220)').click()
+        cy.get(Onboarding.modal).should("not.exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+
+        cy.get(Header.menuBtn).click()
+        cy.contains(HeaderIconText.exitMenuItem).click()
+
+        googleLogin()
+
+        cy.get(NavigationBar.teamLink).click()
+        cy.url().should('include', '/people/team');
+
+        cy.get(Onboarding.modal).should("not.exist")
+        // Assert the overlay is visible and has the correct class
+        cy.get(blackArea.blackArea)
+            .should('not.exist')
+
+    });
 
 })

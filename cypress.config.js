@@ -6,10 +6,10 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
 
-  baseUrl: "https://meta4-dev.srv.festcloud.ai/mesh",
+  baseUrl: "https://meta4-dev.srv.festcloud.ai/",
   chromeWebSecurity: false,
   watchForFileChanges: false,
-  defaultCommandTimeout: 4000,
+  defaultCommandTimeout: 10000,
   requestTimeout: 4000,
   ensureScrollable: false,
   waitForAnimations: true,
