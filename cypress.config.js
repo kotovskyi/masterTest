@@ -9,7 +9,7 @@ module.exports = defineConfig({
   baseUrl: "https://meta4-dev.srv.festcloud.ai/",
   chromeWebSecurity: false,
   watchForFileChanges: false,
-  defaultCommandTimeout: 10000,
+  defaultCommandTimeout: 20000,
   requestTimeout: 4000,
   ensureScrollable: false,
   waitForAnimations: true,

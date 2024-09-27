@@ -5,6 +5,10 @@ export const Header = {
     userPosition: '[data-cy="header-user-position"]'
 };
 
+export const Widgets = {
+    team: '[data-cy="business-full-page-link"]'
+}
+
 export  const blackArea = {
     blackArea: '.react-joyride__overlay'
 }
@@ -22,7 +26,18 @@ export const GlobalSearch = {
     searchInput: '[data-cy="global-search"]',
     searchDropdown: '[data-cy="global-search-dropdown"]',
     searchHistoryText: '[data-cy="global-search-history-text"]',
-    showAllButton: '[data-cy="global-search-show-all-btn"]'
+    showAllButton: '[data-cy="global-search-show-all-btn"]',
+    notFoundText: '[data-cy="global-search-not-found-text"]',
+    historyItem: '[data-cy="global-search-history-item"]',
+    clearHistoryBtn: '[data-cy="global-search-clear-history-btn"]',
+    resultItem: '[data-cy="global-search-result-item"]',
+    resultItemAvatar: '[data-cy="global-search-result-item-avatar"]',
+    resultItemName: '[data-cy="global-search-result-item-name"]',
+    resultItemPosition: '[data-cy="global-search-result-item-position"]',
+    resultItemPhone: '[ data-cy="global-search-result-item-phone"]',
+    resultItemEmail: '[data-cy="global-search-result-item-email"]',
+    searchClearBtn: '[data-cy="global-search-clear-btn"]',
+    searchDeleteBtn: '[data-cy="global-search-delete-btn"]'
 };
 
 export const Onboarding = {
@@ -60,6 +75,16 @@ export const ProfilePage = {
     userBirthday: '[data-cy="profile-page-user-birthday"]',
     userLocation: '[data-cy="profile-page-user-location"]',
     managerName: '[data-cy="profile-page-manager-name"]',
+    employmentLink: '[data-cy="profile-page-employment-link"]',
+    employmentPositionName: '[data-cy="profile-page-employment-position-name"]',
+    employmentYears: '[data-cy="profile-page-employment-years"]',
+    employmentMonths: '[data-cy="profile-page-employment-months"]',
+    workgroupLink: '[data-cy="profile-page-workgroup-link"]',
+    workgroupName: '[data-cy="profile-page-workgroup-name"]',
+    managerLink: '[data-cy="profile-page-manager-link"]',
+    noManagerBlock: '[data-cy="profile-page-no-manager-block"]',
+    placeholder: '[data-cy="profile-page-placeholder"]',
+    generalManagerBlock: '[data-cy="profile-page-general-manager-block"]'
 };
 
 export const TeamPage = {
@@ -72,7 +97,15 @@ export const TeamPage = {
     employeePhoneNumber: '[data-cy="team-page-employee-phone-number"]',
     employeeEmail: '[data-cy="team-page-employee-email"]',
     employeeLocation: '[data-cy="team-page-employee-location"]',
-    employeeLink: '[data-cy="team-page-employee-link"]'
+    employeeLink: '[data-cy="team-page-employee-link"]',
+    collapsedIcon: '[data-cy="team-page-collapsed-icon"]',
+    expandIcon: '[data-cy="team-page-expand-icon"]',
+    filterCheckedIcon: '[data-cy="team-page-filter-checked-icon"]',
+    filterUncheckedIcon: '[data-cy="team-page-filter-unchecked-icon"]',
+    filtersPlaceholder: '[data-cy="team-page-filters-placeholder"]',
+    employeeAvatar: '[data-cy="team-page-employee-avatar"]',
+    employeePlaceholder: '[data-cy="team-page-employee-placeholder"]',
+
 };
 
 
