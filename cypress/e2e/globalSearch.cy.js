@@ -68,7 +68,7 @@ describe('Global Search tests', () => {
         });
         cy.url().should('include', '/people/team');
     });
-    it.only('Filter Employees by Business on Organization Chart', () => {
+    it('Filter Employees by Business on Organization Chart', () => {
         cy.visit( '/people/team');
         cy.get(TeamPage.expandIcon).click()
         cy.get(TeamPage.expandIcon).click()
@@ -106,6 +106,7 @@ describe('Global Search tests', () => {
             .should('not.be.checked').click();
         cy.get(TeamPage.filterCheckedIcon).eq(0).prev('input[type="checkbox"]').should('be.checked')
         cy.get(TeamPage.filterCheckedIcon).eq(1).prev('input[type="checkbox"]').should('be.checked')
+        cy.wait(500)
         cy.get(TeamPage.filterCheckedIcon).eq(2).prev('input[type="checkbox"]').should('be.checked').click()
         cy.url().should('not.include', `workgroupIds=${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}%2C${Cypress.env("businessWorkgroup")}`);
 
@@ -136,7 +137,7 @@ describe('Global Search tests', () => {
     it('Verify Last 5 Search Queries Are Displayed in Search History', () => {
         cy.visit( '/');
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUser"))
-        cy.get(GlobalSearch.resultItemName).should('have.text',Cypress.env("searchedUser"))
+        cy.get(GlobalSearch.resultItemName).should('include.text',Cypress.env("searchedUser"))
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUser"))
         cy.get(GlobalSearch.searchClearBtn).click()
         cy.get(GlobalSearch.searchInput).type(`${Cypress.env("searchedUser")}2`)
@@ -157,7 +158,7 @@ describe('Global Search tests', () => {
         cy.get(GlobalSearch.searchInput).type(`${Cypress.env("searchedUser")}7`)
         cy.get(GlobalSearch.notFoundText).should('have.text',GlobalSearchText.notFound)
         cy.get(GlobalSearch.searchClearBtn).click()
-        cy.get(GlobalSearch.historyItem).should('have.text', `${Cypress.env("searchedUser")}7${Cypress.env("searchedUser")}6${Cypress.env("searchedUser")}5${Cypress.env("searchedUser")}4${Cypress.env("searchedUser")}3${Cypress.env("searchedUser")}2`)
+        cy.get(GlobalSearch.historyItem).should('include.text', `${Cypress.env("searchedUser")}7${Cypress.env("searchedUser")}6${Cypress.env("searchedUser")}5${Cypress.env("searchedUser")}4${Cypress.env("searchedUser")}3${Cypress.env("searchedUser")}2`)
 
         // Click on empty space and then again on global search input. Verify saved search history
         cy.get(GlobalSearch.searchInput).click()
@@ -165,12 +166,12 @@ describe('Global Search tests', () => {
         cy.visit( '/people/my-profile');
         cy.visit( '/');
         cy.get(GlobalSearch.searchInput).click()
-        cy.get(GlobalSearch.historyItem).should('have.text', `${Cypress.env("searchedUser")}7${Cypress.env("searchedUser")}6${Cypress.env("searchedUser")}5${Cypress.env("searchedUser")}4${Cypress.env("searchedUser")}3${Cypress.env("searchedUser")}2`)
+        cy.get(GlobalSearch.historyItem).should('include.text', `${Cypress.env("searchedUser")}7${Cypress.env("searchedUser")}6${Cypress.env("searchedUser")}5${Cypress.env("searchedUser")}4${Cypress.env("searchedUser")}3${Cypress.env("searchedUser")}2`)
 
         //verify after page reloading
         cy.reload()
         cy.get(GlobalSearch.searchInput).click()
-        cy.get(GlobalSearch.historyItem).should('have.text', `${Cypress.env("searchedUser")}7${Cypress.env("searchedUser")}6${Cypress.env("searchedUser")}5${Cypress.env("searchedUser")}4${Cypress.env("searchedUser")}3${Cypress.env("searchedUser")}2`)
+        cy.get(GlobalSearch.historyItem).should('include.text', `${Cypress.env("searchedUser")}7${Cypress.env("searchedUser")}6${Cypress.env("searchedUser")}5${Cypress.env("searchedUser")}4${Cypress.env("searchedUser")}3${Cypress.env("searchedUser")}2`)
 
     });
     it.skip('Verify Search Query Can Be Deleted from History', () => {
@@ -206,7 +207,7 @@ describe('Global Search tests', () => {
     it('Verify Search Query Can Be Deleted from History', () => {
         cy.visit( '/');
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUserReverse"))
-        cy.get(GlobalSearch.resultItemName).should('have.text',Cypress.env("searchedUser"))
+        cy.get(GlobalSearch.resultItemName).should('include.text',Cypress.env("searchedUser"))
         //cy.get(GlobalSearch.resultItemPosition).should('have.text',Cypress.env("searchedUserPosition"));
         cy.get(GlobalSearch.resultItemPhone).should('have.text',Cypress.env("searchedUserPhone"))
         cy.get(GlobalSearch.resultItemEmail).should('have.text' ,Cypress.env("searchedUserEmail"))

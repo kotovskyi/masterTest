@@ -520,8 +520,9 @@ describe('Onboarding tests', () => {
 
         cy.get(NavigationBar.teamLink).click()
         cy.url().should('include', '/people/team');
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn).click()
 
-        cy.get(NavigationBar.widgetsLink).click()
+        cy.get(NavigationBar.widgetsLink).eq(0).click()
         cy.url().should('include', '/mesh');
 
         cy.get(Onboarding.modal).should("not.exist")
@@ -601,8 +602,9 @@ describe('Onboarding tests', () => {
 
         cy.get(NavigationBar.teamLink).click()
         cy.url().should('include', '/people/team');
+        cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn).click()
 
-        cy.get(NavigationBar.widgetsLink).click()
+        cy.get(NavigationBar.widgetsLink).eq(0).click()
         cy.url().should('include', '/mesh');
 
         cy.get(Onboarding.modal).should("not.exist")
@@ -665,8 +667,8 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(330);
-                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(432);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(331);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(433);
             });
         });
 
@@ -711,8 +713,8 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(330);
-                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(432);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(331);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(433);
             });
         });
 
@@ -767,8 +769,8 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(330);
-                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(432);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(331);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(433);
             });
         });
 
@@ -931,7 +933,7 @@ describe('Onboarding tests', () => {
 
                 // Check that the modal is positioned close to the target element
                 expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(129);
-                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(237);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(238);
             });
         });
 

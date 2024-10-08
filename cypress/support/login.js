@@ -36,6 +36,8 @@ export const googleLogin = () => {
                                 win.localStorage.setItem('ag_script_item', "");
                             }
                         });
+                        // Store the Bearer token in Cypress environment for use in other tests
+                        Cypress.env('bearerToken', bearerToken);
                     });
                 });
             });
