@@ -56,14 +56,14 @@ class requestToDb {
             }
         });
     }
-    static insertEmployee(url, bearerToken,workEmail,festCloudId ){
+    static insertEmployee(url, bearerToken,workEmail,festCloudId,workMobilephone ){
         return cy.request({
             method: 'POST',
             url: url,
             body: {
                 query: `mutation MyMutation4 {
  
-  insert_people_employee(objects: {workemail: "${workEmail}", festcloudid: "${festCloudId}"}) {
+  insert_people_employee(objects: {workemail: "${workEmail}", festcloudid: "${festCloudId}", workmobilephone: "${workMobilephone}"}) {
     affected_rows
   }
 }`
@@ -91,6 +91,74 @@ class requestToDb {
             }
         });
     }
-}
+    static getUserByEmail(url, bearerToken,workEmail ){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                    "query": `query MyQuery {
+                        people_employee(where: {workemail: {_eq: "${workEmail}"}}) {
+                            festcloudid
+                        }
+                    }`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
 
+    static deleteAssignment(url, bearerToken, festCloudId){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation MyMutation3 {
+  delete_people_assignment(where: {employeefestcloudid: {_eq: "${festCloudId}"}}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+    static deletePerson(url, bearerToken, festCloudId){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation MyMutation3 {
+    delete_people_person(where: {festcloudid: {_eq: "${festCloudId}"}}) {
+        affected_rows
+    }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+    static deleteEmployee(url, bearerToken, workEmail){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation MyMutation3 {
+  delete_people_employee(where: {person: {}, workemail: {_eq: "${workEmail}"}}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+}
 export default requestToDb;
