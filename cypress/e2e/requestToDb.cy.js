@@ -54,7 +54,7 @@ describe('Database Query Tests', () => {
     })
 
 
-    it('Insert users on devDB', () => {
+    it.only('Insert users on devDB', () => {
         function generateUUID() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 const r = Math.random() * 16 | 0;
