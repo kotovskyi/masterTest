@@ -174,7 +174,7 @@ describe('Global Search tests', () => {
         cy.get(GlobalSearch.historyItem).should('include.text', `${Cypress.env("searchedUser")}7${Cypress.env("searchedUser")}6${Cypress.env("searchedUser")}5${Cypress.env("searchedUser")}4${Cypress.env("searchedUser")}3${Cypress.env("searchedUser")}2`)
 
     });
-    it.skip('Verify Search Query Can Be Deleted from History', () => {
+    it.only('Verify Search Query Can Be Deleted from History', () => {
         cy.visit( '/');
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUser"))
         cy.get(GlobalSearch.resultItemName).find('span').should('have.text', Cypress.env("searchedUser")).and('have.css', 'background-color', 'rgb(255, 233, 156)');
@@ -182,18 +182,21 @@ describe('Global Search tests', () => {
         cy.get(GlobalSearch.searchInput).type(`${Cypress.env("searchedUser")}2`)
         cy.get(GlobalSearch.notFoundText).should('have.text',GlobalSearchText.notFound)
         cy.get(GlobalSearch.searchClearBtn).click()
+        cy.get('[data-cy="global-search-clear-history-btn"]').realClick()
+
+
 // Додаємо властивість pointer-events: none;
 
         // cy.get('[data-cy="global-search-history-item"] > .blocking-element').eq(0) // Знаходимо елемент, що заважає
         //     .invoke('remove');
 
 
-        cy.window().then((win) => {
-            const item = win.document.querySelector('[data-cy="global-search-history-item"]');
-            item.style.display = 'none'; // Приховуємо блокуючий елемент
-        });
-        cy.wait(100); // Затримка в 100 мс
-        cy.get('[data-cy="global-search-clear-history-btn"]').eq(0).click(); // Клікаємо на кнопку
+        // cy.window().then((win) => {
+        //     const item = win.document.querySelector('[data-cy="global-search-history-item"]');
+        //     item.style.display = 'none'; // Приховуємо блокуючий елемент
+        // });
+        // cy.wait(100); // Затримка в 100 мс
+        // cy.get('[data-cy="global-search-clear-history-btn"]').eq(0).click(); // Клікаємо на кнопку
 
 
 

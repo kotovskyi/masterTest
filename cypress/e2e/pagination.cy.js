@@ -61,7 +61,6 @@ describe('Pagination tests', () => {
                 cy.get(`[data-cy="page-${lastPage}"`).should('exist').and('be.visible').should('have.text',lastPage)
 
             });
-
     })
     it('Paginator correctly updates when selecting page 6', () => {
         cy.visit('/people/team');
@@ -354,10 +353,195 @@ describe('Pagination tests', () => {
         // Enter an employee's name in the global search input.
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUserEmail"))
         cy.get('body').type('{enter}');
+        cy.get(TeamPage.employeeName).should('exist')
+        cy.get(TeamPage.employeeEmail).should('exist')
+        cy.get(TeamPage.employeePhoneNumber).should('exist')
+        cy.get(TeamPage.employeePosition).should('exist')
 
         cy.get(TeamPage.filterItem).should('not.be.checked')
         cy.get(Pagination.paginationNavigation).should("not.exist")
 
     })
+    it('Invalid input error message for custom page input', () => {
+        cy.visit('/people/team');
+        //Save data from 1st page (name/email)
+        cy.get(TeamPage.employeeName).then(($firstPageNames) => {
+            const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
 
+            cy.get(TeamPage.employeeEmail).then(($firstPageEmails) => {
+                const firstPageEmails = $firstPageEmails.map((index, el) => Cypress.$(el).text()).get();
+                //Go to page 8
+                cy.get(Pagination.paginationInput).should('have.value', '').type('@!#')
+                cy.get(Pagination.paginationInputButton).click()
+                cy.get(Pagination.allPages).find('li').eq(-2)
+                    .invoke('text').then((lastPage) => {
+
+                    cy.get(Pagination.prevPage).should('exist').and('be.visible')
+                    cy.get(Pagination.nextPage).should('exist').and('be.visible')
+                    cy.get(Pagination.page1).should('exist').and('be.visible').should('have.text', "1").should('have.css', 'background-color', 'rgb(227, 238, 255)');
+                    cy.get(Pagination.page2).should('exist').and('be.visible').should('have.text', "2")
+                    cy.get(Pagination.page3).should('exist').and('be.visible').should('have.text', "3")
+                    cy.get(Pagination.page4).should('exist').and('be.visible').should('have.text', "4")
+                    cy.get(Pagination.page5).should('exist').and('be.visible').should('have.text', "5")
+                    cy.get(Pagination.page6).should('exist').and('be.visible').should('have.text', "6")
+                    cy.get(Pagination.page7).should('exist').and('be.visible').should('have.text', "7")
+                    cy.get(Pagination.page8).should('not.exist')
+                    cy.get(Pagination.allPages).find('li').eq(-2)
+                        .invoke('text') // Отримати текст з елемента
+                        .then((lastPageAfter) => {
+                          expect(lastPage).to.eq(lastPageAfter)
+                            cy.get(`[data-cy="page-${lastPageAfter}"`).should('exist').and('be.visible').should('have.text', lastPage).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+                        });
+                    cy.get(Pagination.paginationInput).should('have.value', '@!#')
+                    cy.get(Pagination.paginationInput).parent().find('fieldset').should('have.css', 'border-color', 'rgb(213, 57, 57)')
+                    //Save data from current page
+                    cy.get(TeamPage.employeeName).then(($currentPageNames) => {
+                        const currentPageNames = $currentPageNames.map((index, el) => Cypress.$(el).text()).get();
+
+                        cy.get(TeamPage.employeeEmail).then(($currentPageEmails) => {
+                            const currentPageEmails = $currentPageEmails.map((index, el) => Cypress.$(el).text()).get();
+
+                            // Compare saved data
+                            expect(firstPageNames).to.deep.equal(currentPageNames);
+                            expect(firstPageEmails).to.deep.equal(currentPageEmails);
+                        });
+                    })
+                })
+            })
+        })
+
+    })
+    it('Verify paginator state and page content after page reload', () => {
+        cy.visit('/people/team');
+        cy.get(TeamPage.employeeName).then(($firstPageNames) => {
+            const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
+
+            cy.get(TeamPage.employeeEmail).then(($firstPageEmails) => {
+                const firstPageEmails = $firstPageEmails.map((index, el) => Cypress.$(el).text()).get();
+                //Click page 5
+                cy.get(Pagination.page5).should('exist').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)').click()
+                cy.get(TeamPage.employeeName).then(($currentPageNames) => {
+                    const currentPageNames = $currentPageNames.map((index, el) => Cypress.$(el).text()).get();
+
+                    cy.get(TeamPage.employeeEmail).then(($currentPageEmails) => {
+                        const currentPageEmails = $currentPageEmails.map((index, el) => Cypress.$(el).text()).get();
+
+                        // Compare saved data
+                        expect(firstPageNames).to.not.deep.equal(currentPageNames);
+                        expect(firstPageEmails).to.not.deep.equal(currentPageEmails);
+
+                        cy.reload()
+
+                        cy.get(TeamPage.employeeName).then(($firstPageNamesReloaded) => {
+                            const firstPageNamesReloaded = $firstPageNamesReloaded.map((index, el) => Cypress.$(el).text()).get();
+
+                            cy.get(TeamPage.employeeEmail).then(($firstPageEmailsReloaded) => {
+                                const firstPageEmailsReloaded = $firstPageEmailsReloaded.map((index, el) => Cypress.$(el).text()).get();
+                                // Compare saved data
+                                expect(firstPageNames).to.deep.equal(firstPageNamesReloaded);
+                                expect(firstPageEmails).to.deep.equal(firstPageEmailsReloaded);
+                            });
+                        })
+                    })
+
+                })
+            })
+        })
+    })
+    //ДОпрацювати з поміняними селекторами на чекбокси
+    it('Paginator correctly handles page using Filters', () => {
+        cy.visit('/people/team');
+        // cy.contains(TeamPage.filterItems, '!Fest')  // Знайти елемент з текстом !Fest
+        //     .find(TeamPage.filterUncheckedIcon).eq(0).check()
+        cy.get(Pagination.paginationNavigation).find('li').its('length') // Get the number of 'li' elements
+            .then((liCount) => {
+                cy.get(TeamPage.expandIcon).eq(1).click()
+                cy.get(TeamPage.expandIcon).eq(1).click()
+                cy.get(TeamPage.expandIcon).eq(1).click()
+                cy.get(TeamPage.filterUncheckedIcon).eq(3)
+                    .prev('input[type="checkbox"]')
+                    .should('not.be.checked').click();
+                cy.get(Pagination.paginationNavigation).find('li').its('length') // Get the number of 'li' elements
+                    .then((liCountAfter) => {
+                        expect(liCount).to.be.gte(liCountAfter)
+                    });
+            })
+    })
+    it('Use arrows for paginator navigation', () => {
+        cy.visit('/people/team');
+        cy.get(TeamPage.employeeName).then(($firstPageNames) => {
+            const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
+            cy.get(TeamPage.employeeEmail).then(($firstPageEmails) => {
+                const firstPageEmails = $firstPageEmails.map((index, el) => Cypress.$(el).text()).get();
+                //Click page next page arrow
+                cy.get(Pagination.nextPage).click()
+                cy.get(Pagination.page2).should('exist').should('have.text', "2").should('have.css', 'background-color', 'rgb(227, 238, 255)');
+                cy.get(Pagination.page1).should('exist').should('have.text', "1").should('have.css', 'background-color', 'rgba(0, 0, 0, 0)');
+
+                cy.get(TeamPage.employeeName).then(($secondPageNames) => {
+                    const secondPageNames = $secondPageNames.map((index, el) => Cypress.$(el).text()).get();
+
+                    cy.get(TeamPage.employeeEmail).then(($secondPageEmails) => {
+                        const secondPageEmails = $secondPageEmails.map((index, el) => Cypress.$(el).text()).get();
+                        // Compare saved data
+                        expect(firstPageNames).to.not.deep.equal(secondPageNames);
+                        expect(firstPageEmails).to.not.deep.equal(secondPageEmails);
+                    });
+                })
+                //Click page prev page arrow
+                cy.get(Pagination.prevPage).click()
+                cy.get(Pagination.page1).should('exist').should('have.text', "1").should('have.css', 'background-color', 'rgb(227, 238, 255)');
+                cy.get(Pagination.page2).should('exist').should('have.text', "2").should('have.css', 'background-color', 'rgba(0, 0, 0, 0)');
+                cy.get(TeamPage.employeeName).then(($firstPageNames) => {
+                    const firstPageNamesLast = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
+                    cy.get(TeamPage.employeeEmail).then(($firstPageEmails) => {
+                        const firstPageEmailsLast = $firstPageEmails.map((index, el) => Cypress.$(el).text()).get();
+                        // Compare saved data
+                        expect(firstPageNames).to.deep.equal(firstPageNamesLast);
+                        expect(firstPageEmails).to.deep.equal(firstPageEmailsLast);
+                    });
+                })
+            })
+        })
+    })
+    it('Enter larger then the last page and verify results', () => {
+        cy.visit('/people/team');
+        // Знайти номер останньої сторінки
+        cy.get(TeamPage.employeeName).then(($firstPageNames) => {
+            const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
+
+            cy.get(TeamPage.employeeEmail).then(($firstPageEmails) => {
+                const firstPageEmails = $firstPageEmails.map((index, el) => Cypress.$(el).text()).get();
+
+                cy.get(Pagination.allPages).find('li').eq(-2).invoke('text').then((lastPage) => {
+                    // Перетворити текст на число
+                    const lastPageNumber = parseInt(lastPage, 10);
+                    expect(lastPageNumber).to.be.a('number'); // Перевірка, що це число
+                    // Додати 999 до номера останньої сторінки
+                    const searchPageNumber = lastPageNumber + 999;
+                    // Ввести число в пошуковий інпут
+                    cy.get(Pagination.paginationInput)
+                        .clear()
+                        .type(`${searchPageNumber}{enter}`); // Ввести число і натиснути Enter
+
+                    // Перевірити, чи ми перейшли на останню сторінку пагінації
+                    cy.get(`[data-cy="page-${lastPage}"`).should('have.css', 'background-color', 'rgb(227, 238, 255)');
+                    //Save data from last page
+                    cy.get(TeamPage.employeeName).then(($lastPageNames) => {
+                        const lastPageNames = $lastPageNames.map((index, el) => Cypress.$(el).text()).get();
+
+                        cy.get(TeamPage.employeeEmail).then(($lastPageEmails) => {
+                            const lastPageEmails = $lastPageEmails.map((index, el) => Cypress.$(el).text()).get();
+
+                            // Compare saved data
+                            expect(firstPageNames).to.not.deep.equal(lastPageNames);
+                            expect(firstPageEmails).to.not.deep.equal(lastPageEmails);
+                        });
+
+                    })
+                })
+
+            })
+        })
+    })
 })

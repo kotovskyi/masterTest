@@ -103,6 +103,7 @@ export const TeamPage = {
     filterCheckedIcon: '[data-cy="team-page-filter-checked-icon"]',
     filterUncheckedIcon: '[data-cy="team-page-filter-unchecked-icon"]',
     filtersPlaceholder: '[data-cy="team-page-filters-placeholder"]',
+    filterItems: '[data-cy="team-page-filter-item"]',
     employeeAvatar: '[data-cy="team-page-employee-avatar"]',
     employeePlaceholder: '[data-cy="team-page-employee-placeholder"]',
     notFoundPage: '[src="assets/images/not-found.png"]'
