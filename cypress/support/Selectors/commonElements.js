@@ -37,7 +37,7 @@ export const GlobalSearch = {
     resultItemPhone: '[ data-cy="global-search-result-item-phone"]',
     resultItemEmail: '[data-cy="global-search-result-item-email"]',
     searchClearBtn: '[data-cy="global-search-clear-btn"]',
-    searchDeleteBtn: '[data-cy="global-search-delete-btn"]'
+    searchDeleteBtn: '[data-cy="global-search-delete-btn"]',
 };
 
 export const Onboarding = {
@@ -102,6 +102,7 @@ export const TeamPage = {
     expandIcon: '[data-cy="team-page-expand-icon"]',
     filterCheckedIcon: '[data-cy="team-page-filter-checked-icon"]',
     filterUncheckedIcon: '[data-cy="team-page-filter-unchecked-icon"]',
+    checkBox: '.PrivateSwitchBase-input',
     filtersPlaceholder: '[data-cy="team-page-filters-placeholder"]',
     filterItems: '[data-cy="team-page-filter-item"]',
     employeeAvatar: '[data-cy="team-page-employee-avatar"]',

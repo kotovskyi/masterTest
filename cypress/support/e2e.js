@@ -16,6 +16,36 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import 'cypress-real-events/support';
+// cypress/support/e2e.js
+
+let globalLocalStorageCache = {};  // Глобальний кеш для всіх тестів
+let selectiveLocalStorageCache = {};  // Кеш для вибіркових тестів
+
+// Глобальне кешування після кожного тесту
+Cypress.on('test:after:run', () => {
+    globalLocalStorageCache = { ...localStorage };
+});
+
+// Відновлення глобального кешу
+Cypress.Commands.add('restoreGlobalLocalStorage', () => {
+    Object.keys(globalLocalStorageCache).forEach(key => {
+        localStorage.setItem(key, globalLocalStorageCache[key]);
+    });
+});
+
+// Команда для збереження вибіркового кешу
+Cypress.Commands.add('saveSelectiveLocalStorage', () => {
+    selectiveLocalStorageCache = { ...localStorage };
+});
+
+// Команда для відновлення вибіркового кешу
+Cypress.Commands.add('restoreSelectiveLocalStorage', () => {
+    Object.keys(selectiveLocalStorageCache).forEach(key => {
+        localStorage.setItem(key, selectiveLocalStorageCache[key]);
+    });
+});
+
+
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

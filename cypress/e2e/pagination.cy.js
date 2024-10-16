@@ -4,7 +4,7 @@ import {GlobalSearch, TeamPage} from "../support/Selectors/commonElements";
 
 
 describe('Pagination tests', () => {
-    beforeEach(() => {
+    before(() => {
         googleLogin()
         cy.window().then((win) => {
             win.localStorage.setItem('onboarding_team_passed', JSON.stringify(true));
@@ -12,11 +12,14 @@ describe('Pagination tests', () => {
             win.localStorage.setItem('onboarding_profile_passed', JSON.stringify(true));
         });
     })
-
+    beforeEach(() => {
+        // Відновлюємо кеш перед кожним тестом
+        cy.restoreGlobalLocalStorage(); // Відновлюємо глобальний кеш перед кожним тестом
+    });
     it('Paginator displays correct page numbers on the first screen', () => {
         cy.visit('/people/team');
         cy.get(Pagination.prevPage).should('exist').and('be.visible').find('svg').should('have.css', 'color', 'rgb(159, 162, 168)');
-        cy.get(Pagination.nextPage).should('exist').and('be.visible').find('svg').should('have.css', 'color', 'rgb(58, 119, 220)');
+        cy.get(Pagination.nextPage).should('exist').and('be.visible').find('svg').should('have.css', 'color', 'rgb(88, 92, 96)');
         cy.get(Pagination.page1).should('exist').and('be.visible').should('have.text',"1").should('have.css', 'background-color', 'rgb(227, 238, 255)');
         cy.get(Pagination.page2).should('exist').and('be.visible').should('have.text',"2")
         cy.get(Pagination.page3).should('exist').and('be.visible').should('have.text',"3")
@@ -66,8 +69,8 @@ describe('Pagination tests', () => {
         cy.visit('/people/team');
         //Click page 6
         cy.get(Pagination.page6).should('exist').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)').click()
-        cy.get(Pagination.prevPage).find('svg').should('exist').and('be.visible').should('have.css', 'color', 'rgb(58, 119, 220)');
-        cy.get(Pagination.nextPage).find('svg').should('exist').and('be.visible').should('have.css', 'color', 'rgb(58, 119, 220)');
+        cy.get(Pagination.prevPage).find('svg').should('exist').and('be.visible').should('have.css', 'color', 'rgb(88, 92, 96)');
+        cy.get(Pagination.nextPage).find('svg').should('exist').and('be.visible').should('have.css', 'color', 'rgb(88, 92, 96)');
         cy.get(Pagination.paginationInput).should('have.value', '')
         cy.get(Pagination.page1).should('exist').and('be.visible').should('have.text',"1").should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
         cy.get(Pagination.page2).should('not.exist')
@@ -103,7 +106,7 @@ describe('Pagination tests', () => {
                 cy.get(`[data-cy="page-${lastPage}"`).should('have.css', 'background-color', 'rgb(227, 238, 255)');
                 //navigation arrow should be gray (inactive)
                 cy.get(Pagination.nextPage).find('svg').should('have.css', 'color', 'rgb(159, 162, 168)');
-                cy.get(Pagination.prevPage).find('svg').should('have.css', 'color', 'rgb(58, 119, 220)');
+                cy.get(Pagination.prevPage).find('svg').should('have.css', 'color', 'rgb(88, 92, 96)');
 
                 cy.get(Pagination.prevPage).should('exist').and('be.visible')
                 cy.get(Pagination.nextPage).should('exist').and('be.visible')

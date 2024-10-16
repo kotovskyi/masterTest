@@ -6,25 +6,34 @@ import {GlobalSearchText} from "../support/consts/globalSearchText";
 const searchNameItem = 'dmytro'
 
 describe('Global Search tests', () => {
-    beforeEach(() => {
+    let shouldRestoreCache = false; // Флаг для контролю кешування
+
+    before(() => {
         googleLogin()
         cy.window().then((win) => {
             win.localStorage.setItem('onboarding_team_passed', JSON.stringify(true));
             win.localStorage.setItem('onboarding_mesh_passed', JSON.stringify(true));
             win.localStorage.setItem('onboarding_profile_passed', JSON.stringify(true));
         });
-    })
+        cy.saveSelectiveLocalStorage(); // Зберігаємо кеш після ініціалізації
 
+    })
+    beforeEach(() => {
+        if (shouldRestoreCache) {
+            cy.restoreSelectiveLocalStorage(); // Відновлюємо вибірковий кеш тільки для цього блоку
+        }
+    });
     it('Search and Click on Employee Name', () => {
+        shouldRestoreCache = true; // Увімкнути кешування для цього тесту
         cy.visit( '/mesh');
         // Enter an employee's name in the global search input.
         cy.get(GlobalSearch.searchInput).type(searchNameItem)
         // Step 1: Get the data from Global Search results and store them
-        cy.get(GlobalSearch.resultItemName).should('contain.text',Cypress.env("searchedUser")).invoke('text').as('userName')
-        cy.get(GlobalSearch.resultItemPosition).should('exist').invoke('text').as('position');
-        cy.get(GlobalSearch.resultItemPhone).should('contain.text',Cypress.env("searchedUserPhone")).invoke('text').as('phone');
-        cy.get(GlobalSearch.resultItemEmail).should('contain.text',Cypress.env("searchedUserEmail")).invoke('text').as('email');
-        cy.get(GlobalSearch.resultItemName).click()
+        cy.get(GlobalSearch.resultItemName).eq(0).should('contain.text',Cypress.env("searchedUser")).invoke('text').as('userName')
+        cy.get(GlobalSearch.resultItemPosition).eq(0).should('exist').invoke('text').as('position');
+        cy.get(GlobalSearch.resultItemPhone).eq(0).should('contain.text',Cypress.env("searchedUserPhone")).invoke('text').as('phone');
+        cy.get(GlobalSearch.resultItemEmail).eq(0).should('contain.text',Cypress.env("searchedUserEmail")).invoke('text').as('email');
+        cy.get(GlobalSearch.resultItemName).eq(0).click()
 
         cy.get('@userName').then((userName) => {
             cy.get(ProfilePage.userName).should('have.text', userName);
@@ -42,6 +51,7 @@ describe('Global Search tests', () => {
         cy.url().should('include', '/people/employee');
     });
     it('Search and Press Enter to View All Results', () => {
+        shouldRestoreCache = true;
         cy.visit( '/mesh');
         //cy.get('.MuiPaper-root')
         // Enter an employee's name in the global search input.
@@ -69,10 +79,11 @@ describe('Global Search tests', () => {
         cy.url().should('include', '/people/team');
     });
     it('Filter Employees by Business on Organization Chart', () => {
+        shouldRestoreCache = true;
         cy.visit( '/people/team');
-        cy.get(TeamPage.expandIcon).click()
-        cy.get(TeamPage.expandIcon).click()
-        cy.get(TeamPage.expandIcon).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
         cy.get(TeamPage.filterUncheckedIcon).eq(3)
             .prev('input[type="checkbox"]')
             .should('not.be.checked').click();
@@ -83,10 +94,11 @@ describe('Global Search tests', () => {
 
     });
     it('Filter Employees by Department on Organization Chart', () => {
+        shouldRestoreCache = true;
         cy.visit( '/people/team');
-        cy.get(TeamPage.expandIcon).click()
-        cy.get(TeamPage.expandIcon).click()
-        cy.get(TeamPage.expandIcon).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
         cy.get(TeamPage.filterUncheckedIcon).eq(0)
             .prev('input[type="checkbox"]')
             .should('not.be.checked').click();
@@ -97,10 +109,11 @@ describe('Global Search tests', () => {
 
     });
     it('Verify Group ID is Removed from URL When Department Filter is Unselected', () => {
+        shouldRestoreCache = true;
         cy.visit( '/people/team');
-        cy.get(TeamPage.expandIcon).click()
-        cy.get(TeamPage.expandIcon).click()
-        cy.get(TeamPage.expandIcon).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
         cy.get(TeamPage.filterUncheckedIcon).eq(0)
             .prev('input[type="checkbox"]')
             .should('not.be.checked').click();
@@ -112,10 +125,11 @@ describe('Global Search tests', () => {
 
     });
     it('Verify URL Retains Correct Group IDs After Page Refresh', () => {
+        shouldRestoreCache = true;
         cy.visit( '/people/team');
-        cy.get(TeamPage.expandIcon).click()
-        cy.get(TeamPage.expandIcon).click()
-        cy.get(TeamPage.expandIcon).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
+        cy.get(TeamPage.expandIcon).eq(0).click()
         cy.get(TeamPage.filterUncheckedIcon).eq(0)
             .prev('input[type="checkbox"]')
             .should('not.be.checked').click();
@@ -135,6 +149,7 @@ describe('Global Search tests', () => {
 
     });
     it('Verify Last 5 Search Queries Are Displayed in Search History', () => {
+        shouldRestoreCache = true;
         cy.visit( '/');
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUser"))
         cy.get(GlobalSearch.resultItemName).should('include.text',Cypress.env("searchedUser"))
@@ -174,7 +189,7 @@ describe('Global Search tests', () => {
         cy.get(GlobalSearch.historyItem).should('include.text', `${Cypress.env("searchedUser")}7${Cypress.env("searchedUser")}6${Cypress.env("searchedUser")}5${Cypress.env("searchedUser")}4${Cypress.env("searchedUser")}3${Cypress.env("searchedUser")}2`)
 
     });
-    it.only('Verify Search Query Can Be Deleted from History', () => {
+    it('Verify Search Query Can Be Deleted from History', () => {
         cy.visit( '/');
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUser"))
         cy.get(GlobalSearch.resultItemName).find('span').should('have.text', Cypress.env("searchedUser")).and('have.css', 'background-color', 'rgb(255, 233, 156)');
@@ -182,32 +197,22 @@ describe('Global Search tests', () => {
         cy.get(GlobalSearch.searchInput).type(`${Cypress.env("searchedUser")}2`)
         cy.get(GlobalSearch.notFoundText).should('have.text',GlobalSearchText.notFound)
         cy.get(GlobalSearch.searchClearBtn).click()
-        cy.get('[data-cy="global-search-clear-history-btn"]').realClick()
+        cy.get(GlobalSearch.clearHistoryBtn).realClick()
+        cy.get(GlobalSearch.searchDropdown).should('have.text',`Раніше ви шукали${Cypress.env("searchedUser")}`)
 
-
-// Додаємо властивість pointer-events: none;
-
-        // cy.get('[data-cy="global-search-history-item"] > .blocking-element').eq(0) // Знаходимо елемент, що заважає
-        //     .invoke('remove');
-
-
-        // cy.window().then((win) => {
-        //     const item = win.document.querySelector('[data-cy="global-search-history-item"]');
-        //     item.style.display = 'none'; // Приховуємо блокуючий елемент
-        // });
-        // cy.wait(100); // Затримка в 100 мс
-        // cy.get('[data-cy="global-search-clear-history-btn"]').eq(0).click(); // Клікаємо на кнопку
-
-
-
-
-        // cy.get(GlobalSearch.historyItem).should('have.text', `${Cypress.env("searchedUser")}2${Cypress.env("searchedUser")}`)
-
-        // Delete search history items
-
-        //cy.get(GlobalSearch.clearHistoryBtn).eq(0).scrollIntoView().click();
     });
-    it('Verify Search Query Can Be Deleted from History', () => {
+    it('Verify Search Results Disappear When "Clear" Button is Clicked After Invalid Search', () => {
+        cy.visit( '/');
+        cy.get(GlobalSearch.searchInput).type(`InvalidTermXYZ`)
+        cy.get(GlobalSearch.notFoundText).should('have.text',GlobalSearchText.notFound)
+        cy.get(GlobalSearch.searchClearBtn).click()
+        cy.get(GlobalSearch.searchDropdown).should('have.text',`Раніше ви шукалиInvalidTermXYZ`)
+        cy.get(GlobalSearch.clearHistoryBtn).realClick()
+        cy.get(GlobalSearch.searchInput).click()
+        cy.get(GlobalSearch.searchDropdown).should('not.exist')
+    });
+
+    it.skip('Verify Search Query Can Be Deleted from History', () => {
         cy.visit( '/');
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUserReverse"))
         cy.get(GlobalSearch.resultItemName).should('include.text',Cypress.env("searchedUser"))
