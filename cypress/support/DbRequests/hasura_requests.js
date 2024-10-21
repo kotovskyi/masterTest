@@ -160,5 +160,124 @@ class requestToDb {
             }
         });
     }
+    static addWorkgroup(url, bearerToken, festCloudId,parentGroup,groupName){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation AddNewWorkgroupInsightOtherGroup {
+  insert_people_workgroup(objects: {festcloudid: "${festCloudId}", workgroupfestcloudid: "${parentGroup}", name: "${groupName}", structuretype: "Legacy", type: "Business Unit"}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+    static changeUserToOtherWorkgroup(url, bearerToken, employeeFestCloudId,workgroupFestCloudId){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation ChangeUserToOtherWorkgroup {
+  update_people_assignment(where: {employeefestcloudid: {_eq: "${employeeFestCloudId}"}}, _set: {workgroupfestcloudid: "${workgroupFestCloudId}"}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+    static updateWorkgroupName(url, bearerToken, workgroupFestCloudId ,newGroupName){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation updatePreLeveWorkgroup {
+  update_people_workgroup(where: {festcloudid: {_eq: "${workgroupFestCloudId}"}}, _set: {name: "${newGroupName}"}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+    static updateWorkgroupLevel(url, bearerToken, GroupName, parenWorkgroupFestCloudId){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation UpdatePeopleWorkgroup {
+  update_people_workgroup(where: {name: {_eq: "${GroupName}"}}, _set: {workgroupfestcloudid: "${parenWorkgroupFestCloudId}"}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+    static deleteWorkgroup(url, bearerToken, GroupName){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation UpdatePeopleWorkgroup {
+  delete_people_workgroup(where: {name: {_eq: "${GroupName}"}}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+    static addPositionName(url, bearerToken, positionName,festCloudId){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation addPositionName {
+  insert_people_position(objects: {positionname: "${positionName}", festcloudid: "${festCloudId}"}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
+    static assignPositionName(url, bearerToken, employeeFestcloudId,positionFestcloudId){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation assignPositionName {
+  update_people_assignment(where: {employeefestcloudid: {_eq: "${employeeFestcloudId}"}}, _set: {positionfestcloudid: "${positionFestcloudId}"}) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
 }
 export default requestToDb;

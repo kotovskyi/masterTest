@@ -6,7 +6,8 @@ export const Header = {
 };
 
 export const Widgets = {
-    team: '[data-cy="business-full-page-link"]'
+    team: '[data-cy="business-full-page-link"]',
+    positionTeamLink: '[data-cy="assignment-full-page-link"]'
 }
 
 export  const blackArea = {

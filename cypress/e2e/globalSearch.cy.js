@@ -211,7 +211,6 @@ describe('Global Search tests', () => {
         cy.get(GlobalSearch.searchInput).click()
         cy.get(GlobalSearch.searchDropdown).should('not.exist')
     });
-
     it.skip('Verify Search Query Can Be Deleted from History', () => {
         cy.visit( '/');
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUserReverse"))
@@ -219,6 +218,17 @@ describe('Global Search tests', () => {
         //cy.get(GlobalSearch.resultItemPosition).should('have.text',Cypress.env("searchedUserPosition"));
         cy.get(GlobalSearch.resultItemPhone).should('have.text',Cypress.env("searchedUserPhone"))
         cy.get(GlobalSearch.resultItemEmail).should('have.text' ,Cypress.env("searchedUserEmail"))
+
+    });
+    it('Click on Widget Position icon must redirect to orgchart filtered by person’s workgroup', () => {
+        shouldRestoreCache = true;
+        cy.visit( '/mesh');
+        cy.get(Widgets.positionTeamLink).trigger('mouseover',{force: true});
+        cy.get(Widgets.positionTeamLink).click({force: true})
+        cy.get(TeamPage.filterUncheckedIcon).eq(2).prev('input[type="checkbox"]').should('be.not.checked')
+        cy.get(TeamPage.filterUncheckedIcon).eq(3).prev('input[type="checkbox"]').should('be.not.checked')
+        cy.get(TeamPage.filterCheckedIcon).eq(0).prev('input[type="checkbox"]').should('be.checked')
+        cy.url().should('match', new RegExp(`/people/team\\?workgroupIds=${Cypress.env("metaLastDepartment")}$`));
 
     });
 
