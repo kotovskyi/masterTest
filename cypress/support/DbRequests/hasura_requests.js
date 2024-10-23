@@ -279,5 +279,23 @@ class requestToDb {
             }
         });
     }
+    static setUserToWorkgroup(url, bearerToken, employeeFestcloudId,workgroupFestcloudId){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation ChangeUserToOtherWorkgroup {
+  update_people_assignment(where: {employeefestcloudid: {_eq: "${employeeFestcloudId}"}}, _set: {workgroupfestcloudid: "${workgroupFestcloudId}"}) {
+    affected_rows
+  }
+}
+`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
 }
 export default requestToDb;

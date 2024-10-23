@@ -15,6 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import "cypress-drag-drop";
 import 'cypress-real-events/support';
 // cypress/support/e2e.js
 

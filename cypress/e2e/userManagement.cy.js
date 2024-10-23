@@ -11,11 +11,10 @@ const positionNames = {
     "programmer": "1cef65fa-d1c4-46bc-b444-445c33d3f111"
 }
 const workGroupFestCloud = {
-    "programmer": "7cef65fa-d1c4-46bc-b444-445c33d3feb5",
-    "qa": "",
-    "ux/ua": "",
-    "ba": ""
-
+    "qa": "4cef65fa-d1c2-46bc-b444-445c33d3feb4",
+    "ux/ua": "0a76157f-791e-4a46-92ca-144011efcf7f",
+    "ba": "b176157f-791e-4a46-92ca-144011efc222",
+    "frontend": "7cef65fa-d1c4-46bc-b444-445c33d3feb5"
 }
 
 describe('Database Query Tests', () => {
@@ -44,7 +43,7 @@ describe('Database Query Tests', () => {
 
         return `${formattedDay}-${formattedMonth}`;
     }
-    it('Insert users on devDB', () => {
+    it.skip('Insert users in devDB', () => {
         // Пройдемо по кожному користувачу в масиві
         users.forEach(user => {
             const festCloudId = generateUUID()
@@ -68,7 +67,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.insert_people_employee).to.have.property('affected_rows', 1);
 
             });
-            requestToDb.insertAssignment(url, token, festCloudId, positionNames.programmer, workGroupFestCloud.programmer, employeeFestCloudId).then((response) => {
+            requestToDb.insertAssignment(url, token, festCloudId, positionNames.programmer, workGroupFestCloud.frontend, employeeFestCloudId).then((response) => {
                 expect(response.status).to.eq(200);
                 // Verify the structure of the response
                 expect(response.body).to.have.property('data');
@@ -77,7 +76,7 @@ describe('Database Query Tests', () => {
             });
         });
     });
-    it('Delete users by email fromm devDB', () => {
+    it.skip('Delete users by email fromm devDB', () => {
         const token = Cypress.env('bearerToken');
         let FESTCloudId
         // Пройдемо по кожному користувачу в масиві
@@ -118,11 +117,11 @@ describe('Database Query Tests', () => {
 
         });
     })
-    it('Add workgroup', () => {
+    it.skip('Add workgroup', () => {
         const festCloudId = generateUUID()
         cy.log(`festCloudId=${festCloudId}`)
         const parentGroup = "fb2592bd-1936-4e50-af81-13d6401f9be5"
-        const groupName = "testName"
+        const groupName = "BusinessLevel"
         requestToDb.addWorkgroup(url, token, festCloudId,parentGroup,groupName)
             .then((response) => {
                 // Verify the status code if needed
@@ -132,7 +131,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data).to.have.property('insert_people_workgroup');
                 expect(response.body.data.insert_people_workgroup).to.have.property('affected_rows', 1);
             });
-        const employeeFestCloudId = "eca0feff-4e0f-49ec-a232-d5785c7961ab"
+        const employeeFestCloudId = "e39c60ac-699c-424c-95d5-804b5ab91e4a"
         let workgroupFestCloudId = festCloudId
         requestToDb.changeUserToOtherWorkgroup(url, token, employeeFestCloudId,workgroupFestCloudId)
             .then((response) => {
@@ -144,7 +143,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.update_people_assignment).to.have.property('affected_rows', 1);
             });
     })
-    it('Update name of workgroup', () => {
+    it.skip('Update name of workgroup', () => {
         const workgroupFestCloudId = "66c9a63e-2071-4d5d-ae0c-046b16d5022d"
         const newGroupName = "newNanedGroup"
         requestToDb.updateWorkgroupName(url, token, workgroupFestCloudId ,newGroupName)
@@ -157,10 +156,10 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.update_people_workgroup).to.have.property('affected_rows', 1);
             });
     })
-    it('Update workgroup level', () => {
-        const parenWorkgroupFestCloudId = "fb2592bd-1936-4e50-af81-13d6401f9be5"
-        const GroupName = "newNanedGroup!"
-        requestToDb.updateWorkgroupLevel(url, token, GroupName, parenWorkgroupFestCloudId)
+    it.skip('Update workgroup level', () => {
+        const parentWorkgroupFestCloudId = "0e223de9-705a-4cdc-b639-9d4b3790453c"
+        const GroupName = "HighLevel"
+        requestToDb.updateWorkgroupLevel(url, token, GroupName, parentWorkgroupFestCloudId)
             .then((response) => {
                 // Verify the status code if needed
                 expect(response.status).to.eq(200);
@@ -170,7 +169,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.update_people_workgroup).to.have.property('affected_rows', 1);
             });
     })
-    it('Delete workgroup', () => {
+    it.skip('Delete workgroup', () => {
         //GROUP MUST BE WITHOUT ANY USERS. DELETE USERS BEFORE!!!
         const GroupName = "newNanedGroup"
         requestToDb.deleteWorkgroup(url, token, GroupName)
@@ -183,7 +182,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.delete_people_workgroup).to.have.property('affected_rows', 1);
             });
     })
-    it('Add position Name', () => {
+    it.skip('Add position Name', () => {
         const festCloudId = generateUUID()
         cy.log(festCloudId)
         const positionName = "Бізнес Аналітик"
@@ -197,9 +196,21 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.insert_people_position).to.have.property('affected_rows', 1);
             });
     })
-    it('Assign position Name', () => {
+    it.skip('Assign position Name', () => {
         const userForAssignment = "91decea5-5187-44ec-b792-cdd2b37846d6"
         requestToDb.assignPositionName(url, token, userForAssignment,positionNames.ba)
+            .then((response) => {
+                // Verify the status code if needed
+                expect(response.status).to.eq(200);
+                // Verify the structure of the response
+                expect(response.body).to.have.property('data');
+                expect(response.body.data).to.have.property('update_people_assignment');
+                expect(response.body.data.update_people_assignment).to.have.property('affected_rows', 1);
+            });
+    })
+    it.skip('Set User to other Workgroup', () => {
+        const employeeFestcloudId = "d0455d20-ad95-4d23-9122-80efc0d95ac4"
+        requestToDb.setUserToWorkgroup(url, token, employeeFestcloudId,workGroupFestCloud.qa)
             .then((response) => {
                 // Verify the status code if needed
                 expect(response.status).to.eq(200);

@@ -81,71 +81,88 @@ describe('Global Search tests', () => {
     it('Filter Employees by Business on Organization Chart', () => {
         shouldRestoreCache = true;
         cy.visit( '/people/team');
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.filterUncheckedIcon).eq(3)
-            .prev('input[type="checkbox"]')
-            .should('not.be.checked').click();
-        cy.get(TeamPage.filterCheckedIcon).eq(0).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(1).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(2).prev('input[type="checkbox"]').should('be.checked')
-        cy.url().should('include', `workgroupIds=${Cypress.env("businessWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("firstDepartmentWorkgroup")}`);
+        cy.contains('.MuiTreeItem-content','!FestCloud').find('[id="chevron-down"]').click()
 
+        cy.contains(TeamPage.teamPageFilterItem,'BusinessLevel').find('[type="checkbox"]')
+            .should('not.be.checked').click();
+        cy.contains(TeamPage.teamPageFilterItem,'BusinessLevel').find('[type="checkbox"]')
+            .should('be.checked');
+        cy.contains(TeamPage.teamPageFilterItem,'HighLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'MiddleLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'lowLevel').find('[type="checkbox"]')
+            .should('be.checked')
+
+        cy.url().should('include', `workgroupIds=${Cypress.env("businessWorkgroup")}%2C${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}`);
     });
     it('Filter Employees by Department on Organization Chart', () => {
         shouldRestoreCache = true;
         cy.visit( '/people/team');
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.filterUncheckedIcon).eq(0)
-            .prev('input[type="checkbox"]')
+        cy.contains('.MuiTreeItem-content','!FestCloud').find('[id="chevron-down"]').click()
+        cy.contains('.MuiTreeItem-content','BusinessLevel').find('[id="chevron-down"]').click()
+        cy.contains('.MuiTreeItem-content','HighLevel').find('[id="chevron-down"]').click()
+        cy.contains('.MuiTreeItem-content','MiddleLevel').find('[id="chevron-down"]').click()
+
+        cy.contains(TeamPage.teamPageFilterItem,'lowLevel').find('[type="checkbox"]')
             .should('not.be.checked').click();
-        cy.get(TeamPage.filterCheckedIcon).eq(0).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(1).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(2).prev('input[type="checkbox"]').should('be.checked')
-        cy.url().should('include', `workgroupIds=${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}%2C${Cypress.env("businessWorkgroup")}`);
+        cy.contains(TeamPage.teamPageFilterItem,'BusinessLevel').find('[type="checkbox"]')
+            .should('be.checked');
+        cy.contains(TeamPage.teamPageFilterItem,'HighLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'MiddleLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'lowLevel').find('[type="checkbox"]')
+            .should('be.checked')
+            cy.url().should('include', `workgroupIds=${Cypress.env("thirdDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("businessWorkgroup")}`);
 
     });
     it('Verify Group ID is Removed from URL When Department Filter is Unselected', () => {
         shouldRestoreCache = true;
         cy.visit( '/people/team');
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.filterUncheckedIcon).eq(0)
-            .prev('input[type="checkbox"]')
-            .should('not.be.checked').click();
-        cy.get(TeamPage.filterCheckedIcon).eq(0).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(1).prev('input[type="checkbox"]').should('be.checked')
-        cy.wait(500)
-        cy.get(TeamPage.filterCheckedIcon).eq(2).prev('input[type="checkbox"]').should('be.checked').click()
+        cy.contains('.MuiTreeItem-content','!FestCloud').find('[id="chevron-down"]').click()
+        cy.contains(TeamPage.teamPageFilterItem,'!FestCloud').find('[type="checkbox"]')
+            .should('not.be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'BusinessLevel').eq(0).find('[type="checkbox"]')
+            .should('not.be.checked').click()
+        cy.contains(TeamPage.teamPageFilterItem,'HighLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'MiddleLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'lowLevel').find('[type="checkbox"]')
+            .should('be.checked')
         cy.url().should('not.include', `workgroupIds=${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}%2C${Cypress.env("businessWorkgroup")}`);
 
     });
     it('Verify URL Retains Correct Group IDs After Page Refresh', () => {
         shouldRestoreCache = true;
         cy.visit( '/people/team');
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.expandIcon).eq(0).click()
-        cy.get(TeamPage.filterUncheckedIcon).eq(0)
-            .prev('input[type="checkbox"]')
-            .should('not.be.checked').click();
-        cy.get(TeamPage.filterCheckedIcon).eq(0).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(1).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(2).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(3).prev('input[type="checkbox"]').should('be.checked')
+        cy.contains('.MuiTreeItem-content','!FestCloud').find('[id="chevron-down"]').click()
 
+        cy.contains(TeamPage.teamPageFilterItem,'BusinessLevel').eq(0).find('[type="checkbox"]')
+            .should('not.be.checked').click()
+        cy.contains(TeamPage.teamPageFilterItem,'HighLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'MiddleLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'lowLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'!FestCloud').find('[type="checkbox"]').eq(0)
+            .should('not.be.checked')
 
-        cy.url().should('include', `workgroupIds=${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}%2C${Cypress.env("businessWorkgroup")}`);
+        cy.url().should('include', `workgroupIds=${Cypress.env("businessWorkgroup")}%2C${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}`);
         cy.reload()
-        cy.url().should('include', `workgroupIds=${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}%2C${Cypress.env("businessWorkgroup")}`);
-        cy.get(TeamPage.filterCheckedIcon).eq(0).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(1).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(2).prev('input[type="checkbox"]').should('be.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(3).prev('input[type="checkbox"]').should('be.checked')
+        cy.url().should('include', `workgroupIds=${Cypress.env("businessWorkgroup")}%2C${Cypress.env("firstDepartmentWorkgroup")}%2C${Cypress.env("secondDepartmentWorkgroup")}%2C${Cypress.env("thirdDepartmentWorkgroup")}`);
+        cy.contains(TeamPage.teamPageFilterItem,'BusinessLevel').eq(0).find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'HighLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'MiddleLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'lowLevel').find('[type="checkbox"]')
+            .should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'!FestCloud').find('[type="checkbox"]').eq(0)
+            .should('not.be.checked')
 
     });
     it('Verify Last 5 Search Queries Are Displayed in Search History', () => {
@@ -211,25 +228,22 @@ describe('Global Search tests', () => {
         cy.get(GlobalSearch.searchInput).click()
         cy.get(GlobalSearch.searchDropdown).should('not.exist')
     });
-    it.skip('Verify Search Query Can Be Deleted from History', () => {
-        cy.visit( '/');
-        cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUserReverse"))
-        cy.get(GlobalSearch.resultItemName).should('include.text',Cypress.env("searchedUser"))
-        //cy.get(GlobalSearch.resultItemPosition).should('have.text',Cypress.env("searchedUserPosition"));
-        cy.get(GlobalSearch.resultItemPhone).should('have.text',Cypress.env("searchedUserPhone"))
-        cy.get(GlobalSearch.resultItemEmail).should('have.text' ,Cypress.env("searchedUserEmail"))
-
-    });
     it('Click on Widget Position icon must redirect to orgchart filtered by person’s workgroup', () => {
         shouldRestoreCache = true;
         cy.visit( '/mesh');
+        let chipText;
+        cy.get(Widgets.profileWidget).find('.MuiChip-label').eq(3).then(($label) => {
+            chipText = $label.text();
         cy.get(Widgets.positionTeamLink).trigger('mouseover',{force: true});
         cy.get(Widgets.positionTeamLink).click({force: true})
-        cy.get(TeamPage.filterUncheckedIcon).eq(2).prev('input[type="checkbox"]').should('be.not.checked')
-        cy.get(TeamPage.filterUncheckedIcon).eq(3).prev('input[type="checkbox"]').should('be.not.checked')
-        cy.get(TeamPage.filterCheckedIcon).eq(0).prev('input[type="checkbox"]').should('be.checked')
-        cy.url().should('match', new RegExp(`/people/team\\?workgroupIds=${Cypress.env("metaLastDepartment")}$`));
+        cy.contains(TeamPage.teamPageFilterItem, chipText).find('[type="checkbox"]').should('be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'meta4').find('[type="checkbox"]').eq(0).should('not.be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'UX/UI').find('[type="checkbox"]').eq(0).should('not.be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'frontend').find('[type="checkbox"]').eq(0).should('not.be.checked')
+        cy.contains(TeamPage.teamPageFilterItem,'BA').find('[type="checkbox"]').eq(0).should('not.be.checked')
 
+            cy.url().should('match', new RegExp(`/people/team\\?workgroupIds=${Cypress.env("metaLastDepartment")}$`));
+        });
     });
 
 })

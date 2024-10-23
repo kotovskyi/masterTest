@@ -7,7 +7,8 @@ export const Header = {
 
 export const Widgets = {
     team: '[data-cy="business-full-page-link"]',
-    positionTeamLink: '[data-cy="assignment-full-page-link"]'
+    positionTeamLink: '[data-cy="assignment-full-page-link"]',
+    profileWidget: '[data-cy="profile-widget"]'
 }
 
 export  const blackArea = {
@@ -103,6 +104,7 @@ export const TeamPage = {
     expandIcon: '[data-cy="team-page-expand-icon"]',
     filterCheckedIcon: '[data-cy="team-page-filter-checked-icon"]',
     filterUncheckedIcon: '[data-cy="team-page-filter-unchecked-icon"]',
+    teamPageFilterItem: '[data-cy="team-page-filter-item"]',
     checkBox: '.PrivateSwitchBase-input',
     filtersPlaceholder: '[data-cy="team-page-filters-placeholder"]',
     filterItems: '[data-cy="team-page-filter-item"]',

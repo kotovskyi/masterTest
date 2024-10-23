@@ -458,9 +458,7 @@ describe('Pagination tests', () => {
         //     .find(TeamPage.filterUncheckedIcon).eq(0).check()
         cy.get(Pagination.paginationNavigation).find('li').its('length') // Get the number of 'li' elements
             .then((liCount) => {
-                cy.get(TeamPage.expandIcon).eq(1).click()
-                cy.get(TeamPage.expandIcon).eq(1).click()
-                cy.get(TeamPage.expandIcon).eq(1).click()
+                cy.get(TeamPage.expandIcon).eq(0).click()
                 cy.get(TeamPage.filterUncheckedIcon).eq(3)
                     .prev('input[type="checkbox"]')
                     .should('not.be.checked').click();
