@@ -8,7 +8,8 @@ const positionNames = {
     "ba": "8a343464-ac50-44c7-b672-ce4740648884",
     "cok": "c264d81b-d540-4298-8ae9-15206a898f23",
     "QA": "01690fbc-8d16-4b8a-8396-2ad70e763389",
-    "programmer": "1cef65fa-d1c4-46bc-b444-445c33d3f111"
+    "programmer": "1cef65fa-d1c4-46bc-b444-445c33d3f111",
+    "designer": "2def65fa-d1c4-46bc-b444-445c33d3f133"
 }
 const workGroupFestCloud = {
     "qa": "4cef65fa-d1c2-46bc-b444-445c33d3feb4",
@@ -67,7 +68,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.insert_people_employee).to.have.property('affected_rows', 1);
 
             });
-            requestToDb.insertAssignment(url, token, festCloudId, positionNames.programmer, workGroupFestCloud.frontend, employeeFestCloudId).then((response) => {
+            requestToDb.insertAssignment(url, token, festCloudId, positionNames.designer, workGroupFestCloud["ux/ua"], employeeFestCloudId).then((response) => {
                 expect(response.status).to.eq(200);
                 // Verify the structure of the response
                 expect(response.body).to.have.property('data');
@@ -209,7 +210,7 @@ describe('Database Query Tests', () => {
             });
     })
     it.skip('Set User to other Workgroup', () => {
-        const employeeFestcloudId = "d0455d20-ad95-4d23-9122-80efc0d95ac4"
+        const employeeFestcloudId = "a4f02698-79d7-452e-a74d-2b7101b07f96"
         requestToDb.setUserToWorkgroup(url, token, employeeFestcloudId,workGroupFestCloud.qa)
             .then((response) => {
                 // Verify the status code if needed

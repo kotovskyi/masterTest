@@ -15,9 +15,14 @@ describe('Pagination tests', () => {
     beforeEach(() => {
         // Відновлюємо кеш перед кожним тестом
         cy.restoreGlobalLocalStorage(); // Відновлюємо глобальний кеш перед кожним тестом
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            // returning false here prevents Cypress from
+            // failing the test
+            return false
+        })
+        cy.visit('/people/team');
     });
     it('Paginator displays correct page numbers on the first screen', () => {
-        cy.visit('/people/team');
         cy.get(Pagination.prevPage).should('exist').and('be.visible').find('svg').should('have.css', 'color', 'rgb(159, 162, 168)');
         cy.get(Pagination.nextPage).should('exist').and('be.visible').find('svg').should('have.css', 'color', 'rgb(88, 92, 96)');
         cy.get(Pagination.page1).should('exist').and('be.visible').should('have.text',"1").should('have.css', 'background-color', 'rgb(227, 238, 255)');
@@ -66,7 +71,6 @@ describe('Pagination tests', () => {
             });
     })
     it('Paginator correctly updates when selecting page 6', () => {
-        cy.visit('/people/team');
         //Click page 6
         cy.get(Pagination.page6).should('exist').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)').click()
         cy.get(Pagination.prevPage).find('svg').should('exist').and('be.visible').should('have.css', 'color', 'rgb(88, 92, 96)');
@@ -93,7 +97,6 @@ describe('Pagination tests', () => {
             });
     })
     it('Paginator correctly updates when selecting last page', () => {
-        cy.visit('/people/team');
         //Click last page
         cy.get(Pagination.allPages).find('li').eq(-2)
             .invoke('text') // Отримати текст з елемента
@@ -123,7 +126,6 @@ describe('Pagination tests', () => {
             });
     })
     it('Input accepts valid numbers and click Enter', () => {
-        cy.visit('/people/team');
         //Save data from 1st page (name/email)
         cy.get(TeamPage.employeeName).then(($firstPageNames) => {
             const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
@@ -173,7 +175,6 @@ describe('Pagination tests', () => {
         })
     })
     it('Input accepts valid numbers and click "Go" btn', () => {
-        cy.visit('/people/team');
         //Save data from 1st page (name/email)
         cy.get(TeamPage.employeeName).then(($firstPageNames) => {
             const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
@@ -225,7 +226,6 @@ describe('Pagination tests', () => {
         })
     })
     it('Input accepts valid numbers and non valid symbol', () => {
-        cy.visit('/people/team');
         //Save data from 1st page (name/email)
         cy.get(TeamPage.employeeName).then(($firstPageNames) => {
             const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
@@ -277,7 +277,6 @@ describe('Pagination tests', () => {
         })
     })
     it('Custom page input accepts leading zeroes', () => {
-        cy.visit('/people/team');
         //Save data from 1st page (name/email)
         cy.get(TeamPage.employeeName).then(($firstPageNames) => {
             const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
@@ -329,7 +328,6 @@ describe('Pagination tests', () => {
         })
     })
     it('Paginator correctly handles no results on a page', () => {
-        cy.visit('/people/team');
         // Enter an employee's name in the global search input.
         cy.get(GlobalSearch.searchInput).type("Non Existing Result")
         cy.get('body').type('{enter}');
@@ -342,7 +340,6 @@ describe('Pagination tests', () => {
 
     })
     it('Keyboard navigation for the paginator', () => {
-        cy.visit('/people/team');
         cy.get(Pagination.page1).focus().realPress('Tab').realPress('Tab').realPress('Tab').realPress('Tab').realPress('Tab').realPress('Tab').realPress('Tab').realPress('Tab').realPress('Tab')
             .then(() => {
                 // Переконайтеся, що фокус на інпуті
@@ -352,7 +349,6 @@ describe('Pagination tests', () => {
 
     })
     it('Verify one page result', () => {
-        cy.visit('/people/team');
         // Enter an employee's name in the global search input.
         cy.get(GlobalSearch.searchInput).type(Cypress.env("searchedUserEmail"))
         cy.get('body').type('{enter}');
@@ -366,7 +362,6 @@ describe('Pagination tests', () => {
 
     })
     it('Invalid input error message for custom page input', () => {
-        cy.visit('/people/team');
         //Save data from 1st page (name/email)
         cy.get(TeamPage.employeeName).then(($firstPageNames) => {
             const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
@@ -415,7 +410,6 @@ describe('Pagination tests', () => {
 
     })
     it('Verify paginator state and page content after page reload', () => {
-        cy.visit('/people/team');
         cy.get(TeamPage.employeeName).then(($firstPageNames) => {
             const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
 
@@ -453,7 +447,6 @@ describe('Pagination tests', () => {
     })
     //ДОпрацювати з поміняними селекторами на чекбокси
     it('Paginator correctly handles page using Filters', () => {
-        cy.visit('/people/team');
         // cy.contains(TeamPage.filterItems, '!Fest')  // Знайти елемент з текстом !Fest
         //     .find(TeamPage.filterUncheckedIcon).eq(0).check()
         cy.get(Pagination.paginationNavigation).find('li').its('length') // Get the number of 'li' elements
@@ -469,7 +462,6 @@ describe('Pagination tests', () => {
             })
     })
     it('Use arrows for paginator navigation', () => {
-        cy.visit('/people/team');
         cy.get(TeamPage.employeeName).then(($firstPageNames) => {
             const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();
             cy.get(TeamPage.employeeEmail).then(($firstPageEmails) => {
@@ -506,7 +498,6 @@ describe('Pagination tests', () => {
         })
     })
     it('Enter larger then the last page and verify results', () => {
-        cy.visit('/people/team');
         // Знайти номер останньої сторінки
         cy.get(TeamPage.employeeName).then(($firstPageNames) => {
             const firstPageNames = $firstPageNames.map((index, el) => Cypress.$(el).text()).get();

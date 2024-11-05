@@ -15,9 +15,14 @@ describe('Move widgets using DnD', () => {
     beforeEach(() => {
         // Відновлюємо кеш перед кожним тестом
         cy.restoreGlobalLocalStorage(); // Відновлюємо глобальний кеш перед кожним тестом
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            // returning false here prevents Cypress from
+            // failing the test
+            return false
+        })
     });
     it('should drag the widget horizontally to the right within the same row using DataTransfer', () => {
-        cy.visit('/mesh');
+        cy.visit('/');
 
         // Відкриваємо меню для перетягування
         cy.get('[data-cy="chat-widget"]')

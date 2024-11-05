@@ -24,17 +24,13 @@ export const googleLogin = () => {
                             picture: "https://lh3.googleusercontent.com/a/ACg8ocKXmEluwzCZoqs-z9fL0B5ESLPKuAxI9dRXWdBgZGajZd-r8Ro=s96-c",
                             hd: "festcloud.ai"
                         };
-
-                        cy.visit('/', {
-                            onBeforeLoad(win) {
-                                // Set tokens and user info in localStorage
-                                win.localStorage.setItem('auth_access_token', bearerToken);
-                                win.localStorage.setItem('auth_refresh_token', newRefreshToken);
-                                win.localStorage.setItem('sso_access', JSON.stringify(ssoAccess));
-                                win.localStorage.setItem('sso_refresh_token', Cypress.env("googleRefreshToken"));
-                                win.localStorage.setItem('sso_user', JSON.stringify(ssoUser));
-                                win.localStorage.setItem('ag_script_item', "");
-                            }
+                        cy.window().then((win) => {
+                            win.localStorage.setItem('auth_access_token', bearerToken);
+                            win.localStorage.setItem('auth_refresh_token', newRefreshToken);
+                            win.localStorage.setItem('sso_access', JSON.stringify(ssoAccess));
+                            win.localStorage.setItem('sso_refresh_token', Cypress.env("googleRefreshToken"));
+                            win.localStorage.setItem('sso_user', JSON.stringify(ssoUser));
+                            win.localStorage.setItem('ag_script_item', "");
                         });
                         // Store the Bearer token in Cypress environment for use in other tests
                         Cypress.env('bearerToken', bearerToken);

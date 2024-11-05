@@ -1,12 +1,12 @@
 export const users = [
     {
-        familyName: "Павлюк",
-        name: "В'ячеслав",
-        middlename: "",
+        familyName: "Болібрух",
+        name: "Назарій",
+        middlename: "Андрійович",
         gender: "Чоловічий",
-        workEmail: "vyacheslav.pavlyuk@festcloud.ai",
-        mobilePhone: "06300056500",
-        workMobilephone: "+38063756000"
+        workEmail: "nazarii.bolibrukh@festcloud.ai",
+        mobilePhone: "+380961053006",
+        workMobilephone: "+380961053006"
     }
 ];
 
