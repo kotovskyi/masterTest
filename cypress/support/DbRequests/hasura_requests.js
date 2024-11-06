@@ -38,13 +38,13 @@ class requestToDb {
         });
     }
 
-    static insertPerson(url, bearerToken, festCloudId,familyName,name,gender,dayofbirth,middlename,mobilePhone){
+    static insertPerson(url, bearerToken, festCloudId,familyName,name,gender,dayofbirth,birthday,middlename,mobilePhone){
         return cy.request({
             method: 'POST',
             url: url,
             body: {
                 query: `mutation MyMutation4 {
-  insert_people_person(objects: {festcloudid: "${festCloudId}", familyname: "${familyName}", name: "${name}", gender: "${gender}", dayofbirth: "${dayofbirth}", middlename: "${middlename}", mobilephone: "${mobilePhone}"}) {
+  insert_people_person(objects: {festcloudid: "${festCloudId}", familyname: "${familyName}", name: "${name}", gender: "${gender}", dayofbirth: "${dayofbirth}", birthday: "${birthday}", middlename: "${middlename}", mobilephone: "${mobilePhone}"}) {
     affected_rows
   }
 }`

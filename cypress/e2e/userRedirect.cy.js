@@ -1,6 +1,5 @@
 import {googleLogin} from "../support/login";
-import {Pagination} from "../support/Selectors/pagination";
-import {GlobalSearch, Header, TeamPage} from "../support/Selectors/commonElements";
+import {Header} from "../support/Selectors/commonElements";
 import {HeaderIconText} from "../support/consts/meshPageTexts";
 
 describe('Redirect on Link', () => {

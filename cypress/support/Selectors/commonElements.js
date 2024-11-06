@@ -2,13 +2,15 @@ export const Header = {
     menuBtn: '[data-cy="header-menu-btn"]',
     menu: '[data-cy="header-menu"]',
     userName: '[data-cy="header-user-name"]',
-    userPosition: '[data-cy="header-user-position"]'
+    userPosition: '[data-cy="header-user-position"]',
+    siteLogo: '[href="/mesh"]'
 };
 
 export const Widgets = {
     team: '[data-cy="business-full-page-link"]',
     positionTeamLink: '[data-cy="assignment-full-page-link"]',
-    profileWidget: '[data-cy="profile-widget"]'
+    profileWidget: '[data-cy="profile-widget"]',
+    teamWidget: '[data-cy="business-widget"]'
 }
 
 export  const blackArea = {

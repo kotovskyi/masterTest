@@ -4,6 +4,8 @@ import {users,  usersDel} from '../fixtures/usersData';
 const uuid = () => Cypress._.random(0, 1e6)
 const id = uuid()
 const testname = `testname${id}`
+import {generateRandomDate,generateUUID } from '../support/utils';
+
 const positionNames = {
     "ba": "8a343464-ac50-44c7-b672-ce4740648884",
     "cok": "c264d81b-d540-4298-8ae9-15206a898f23",
@@ -26,32 +28,15 @@ describe('Database Query Tests', () => {
     const url = Cypress.env('linkHasuraDev');
     const token = Cypress.env('bearerToken');
 
-    function generateUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = Math.random() * 16 | 0;
-            const v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
-    function generateRandomDate() {
-        const day = Math.floor(Math.random() * 31) + 1; // Випадковий день від 1 до 31
-        const month = Math.floor(Math.random() * 12) + 1; // Випадковий місяць від 1 до 12
-
-        // Додаємо нулі перед числами, якщо день або місяць складається з одного символу
-        const formattedDay = day < 10 ? '0' + day : day;
-        const formattedMonth = month < 10 ? '0' + month : month;
-
-        return `${formattedDay}-${formattedMonth}`;
-    }
     it.skip('Insert users in devDB', () => {
         // Пройдемо по кожному користувачу в масиві
         users.forEach(user => {
             const festCloudId = generateUUID()
-            let dayofbirth = generateRandomDate()
+            const randomDate = generateRandomDate();
+            let dayofbirth = randomDate.date
             let employeeFestCloudId = festCloudId
-
-            requestToDb.insertPerson(url, token, festCloudId, user.familyName, user.name, user.gender, dayofbirth, user.middlename, user.mobilePhone).then((response) => {
+            let birthday = randomDate.birthday
+            requestToDb.insertPerson(url, token, festCloudId, user.familyName, user.name, user.gender, dayofbirth, birthday, user.middlename, user.mobilePhone).then((response) => {
                 // Verify the status code if needed
                 expect(response.status).to.eq(200);
                 // Verify the structure of the response
@@ -68,7 +53,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.insert_people_employee).to.have.property('affected_rows', 1);
 
             });
-            requestToDb.insertAssignment(url, token, festCloudId, positionNames.designer, workGroupFestCloud["ux/ua"], employeeFestCloudId).then((response) => {
+            requestToDb.insertAssignment(url, token, festCloudId, positionNames.QA, workGroupFestCloud.qa, employeeFestCloudId).then((response) => {
                 expect(response.status).to.eq(200);
                 // Verify the structure of the response
                 expect(response.body).to.have.property('data');
