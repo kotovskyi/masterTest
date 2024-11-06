@@ -18,7 +18,9 @@ module.exports = defineConfig({
   videoUploadOnPasses: false,
   testTimeout: 216000000,
   numTestsKeptInMemory: 10,
-  experimentalMemoryManagement: true
+  experimentalMemoryManagement: true,
+  projectId: "n29mek",
 
-},
+
+  },
 });

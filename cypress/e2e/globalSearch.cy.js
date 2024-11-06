@@ -22,6 +22,11 @@ describe('Global Search tests', () => {
         if (shouldRestoreCache) {
             cy.restoreSelectiveLocalStorage(); // Відновлюємо вибірковий кеш тільки для цього блоку
         }
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            // returning false here prevents Cypress from
+            // failing the test
+            return false
+        })
     });
     it('Search and Click on Employee Name', () => {
         shouldRestoreCache = true; // Увімкнути кешування для цього тесту

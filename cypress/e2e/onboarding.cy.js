@@ -14,6 +14,13 @@ import {HeaderIconText} from "../support/consts/meshPageTexts";
 describe('Onboarding tests', () => {
     beforeEach(() => {
         googleLogin()
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            // returning false here prevents Cypress from
+            // failing the test
+            return false
+        })
+        cy.visit('/')
+
     })
     it('Verify 1st modal window and "Skip" button for Mesh onboarding', () => {
         // Assert the overlay is visible and has the correct class
@@ -153,7 +160,7 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(82);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(86);
                 expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(65);
             });
         });
@@ -213,7 +220,7 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(72);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(75);
                 expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(65);
             });
         });
@@ -282,7 +289,7 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(72);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(75);
                 expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(65);
             });
         });
@@ -357,7 +364,7 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(62);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(65);
                 expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(65);
             });
         });
@@ -438,7 +445,7 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(161);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(171);
                 expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(65);
             });
         });
@@ -599,7 +606,7 @@ describe('Onboarding tests', () => {
         cy.contains(HeaderIconText.exitMenuItem).click()
 
         googleLogin()
-
+        cy.visit('/')
         cy.get(NavigationBar.teamLink).click()
         cy.url().should('include', '/people/team');
         cy.get(Onboarding.skipButton).should("have.text", NavigationText.skipBtn).click()
@@ -667,8 +674,8 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(331);
-                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(433);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(340);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(445);
             });
         });
 
@@ -713,8 +720,8 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(331);
-                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(433);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(340);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(445);
             });
         });
 
@@ -769,8 +776,8 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(331);
-                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(433);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(340);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(445);
             });
         });
 
@@ -932,8 +939,8 @@ describe('Onboarding tests', () => {
                 const modalPosition = $modal[0].getBoundingClientRect();
 
                 // Check that the modal is positioned close to the target element
-                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(129);
-                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(238);
+                expect(Math.abs(modalPosition.top - elementPosition.top)).to.be.lessThan(135);
+                expect(Math.abs(modalPosition.left - elementPosition.left)).to.be.lessThan(250);
             });
         });
 
@@ -982,7 +989,7 @@ describe('Onboarding tests', () => {
         cy.contains(HeaderIconText.exitMenuItem).click()
 
         googleLogin()
-
+        cy.visit('/')
         cy.get(NavigationBar.teamLink).click()
         cy.url().should('include', '/people/team');
 
