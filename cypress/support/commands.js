@@ -26,6 +26,17 @@
 
 const axios = require('axios');
 
+Cypress.Commands.add('dragAndDrop', (dragLocator, dropLocator) => {
+    cy.get(dragLocator)
+        .realMouseDown({ button: 'left', position: 'center' }) // Press down on the element
+        .realMouseMove(0, 100, { position: 'center' })         // Move mouse down slightly to initiate drag
+        .wait(200);                                            // Wait for smooth dragging
+
+    cy.get(dropLocator)
+        .realMouseMove(1, 1, { position: 'center' })           // Move mouse to the target element
+        .realMouseUp();                                        // Release mouse
+});
+
 Cypress.Commands.add('googleAuth', () => {
     cy.log('Authenticating with Google...');
 

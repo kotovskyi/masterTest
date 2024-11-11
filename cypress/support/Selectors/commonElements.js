@@ -10,7 +10,16 @@ export const Widgets = {
     team: '[data-cy="business-full-page-link"]',
     positionTeamLink: '[data-cy="assignment-full-page-link"]',
     profileWidget: '[data-cy="profile-widget"]',
-    teamWidget: '[data-cy="business-widget"]'
+    teamWidget: '[data-cy="business-widget"]',
+    jiraWidget: '[data-cy="jira-widget"]',
+    calendarWidget: '[data-cy="calendar-widget"]',
+    positionWidget: '[data-cy="assignment-widget"]',
+    moreBtnWidget: '[id="more"]',
+    menuItem: '[role="menuitem"]',
+    dialogWidgetSize: '[role="dialog"]',
+    smallSize: '[class="MuiBox-root css-walyej"]',
+    mediumSize: '[class="MuiBox-root css-walyej"]',
+    hugeSize: '[class="MuiBox-root css-walyej"]'
 }
 
 export  const blackArea = {

@@ -2,6 +2,7 @@ import {googleLogin} from "../support/login";
 import {GlobalSearch, ProfilePage, TeamPage, Widgets} from "../support/Selectors/commonElements";
 import {FullPageText} from "../support/consts/onboardingTexts";
 import {GlobalSearchText} from "../support/consts/globalSearchText";
+import {Pagination} from "../support/Selectors/pagination";
 
 const searchNameItem = 'dmytro'
 
@@ -250,5 +251,133 @@ describe('Global Search tests', () => {
             cy.url().should('match', new RegExp(`/people/team\\?workgroupIds=${Cypress.env("metaLastDepartment")}$`));
         });
     });
+    it('Verify search results sorting in dropdown with results', () => {
+        shouldRestoreCache = true;
+        cy.visit('/');
+        cy.get(GlobalSearch.searchInput).type("in");
+        cy.get(GlobalSearch.showAllButton).click();
+
+        // Retrieve the list of names from search results
+        cy.get(GlobalSearch.searchDropdown)
+            .find(GlobalSearch.resultItemName)
+            .then(($nameElements) => {
+                // Extract, trim, and normalize case of last names
+                const lastNames = [...$nameElements].map((el) => {
+                    const fullName = el.innerText.trim();
+                    const lastName = fullName.split(" ").pop().trim().toLowerCase();
+                    return lastName;
+                });
+
+                // Sort using localeCompare for accurate, case-insensitive sorting
+                const sortedLastNames = [...lastNames].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+                // Join the unsorted and sorted names into text for comparison
+                const unsortedText = lastNames.join(" ");
+                const sortedText = sortedLastNames.join(" ");
+
+                // Log strings for debugging purposes
+                cy.log("Unsorted Last Names Text:", unsortedText);
+                cy.log("Sorted Last Names Text:", sortedText);
+
+                // Compare the unsorted and sorted text directly
+                expect(unsortedText).to.equal(sortedText);
+            });
+    });
+    it('Verify global search items sorting using sort btn (Asc)', () => {
+        shouldRestoreCache = true;
+        cy.visit('/people/team');
+
+        // Click sorting button and choose sorting option
+        cy.get(TeamPage.sortingBtn).click();
+        cy.get(TeamPage.sortingMenu).contains('За прізвищем (А-Я)').click();
+
+        // Verify sorting on the first page and last page together
+        cy.get(TeamPage.employeeName).then(($nameElements) => {
+            // Extract, trim, and normalize case of last names from the first page
+            const firstPageLastNames = [...$nameElements].map((el) => {
+                const fullName = el.innerText.trim();
+                const lastName = fullName.split(" ").pop().trim().toLowerCase();
+                return lastName;
+            });
+
+            // Navigate to the last page
+            cy.get(Pagination.allPages).find('li').eq(-2).click();
+
+            // Extract, trim, and normalize case of last names from the last page
+            cy.get(TeamPage.employeeName).then(($lastPageNameElements) => {
+                const lastPageLastNames = [...$lastPageNameElements].map((el) => {
+                    const fullName = el.innerText.trim();
+                    const lastName = fullName.split(" ").pop().trim().toLowerCase();
+                    return lastName;
+                });
+
+                // Combine last names from both pages
+                const combinedLastNames = [...firstPageLastNames, ...lastPageLastNames];
+
+                // Sort the combined last names alphabetically
+                const sortedCombinedLastNames = [...combinedLastNames].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+                // Join the unsorted and sorted names into text for comparison
+                const unsortedText = combinedLastNames.join(" ");
+                const sortedText = sortedCombinedLastNames.join(" ");
+
+                // Log strings for debugging purposes
+                cy.log("Combined Unsorted Last Names Text:", unsortedText);
+                cy.log("Combined Sorted Last Names Text:", sortedText);
+
+                // Verify that the combined list is sorted alphabetically
+                expect(unsortedText).to.equal(sortedText);
+            });
+        });
+    });
+    it('Verify global search items sorting in descending order using sort btn', () => {
+        shouldRestoreCache = true;
+        cy.visit('/people/team');
+
+        // Click sorting button and choose sorting option for descending order
+        cy.get(TeamPage.sortingBtn).click();
+        cy.get(TeamPage.sortingMenu).contains('[role="menuitem"]','За прізвищем (Я-A)').click(); // Assuming this is for Z-A sorting
+
+        // Verify sorting on the first page and last page together
+        cy.get(TeamPage.employeeName).then(($nameElements) => {
+            // Extract, trim, and normalize case of last names from the first page
+            const firstPageLastNames = [...$nameElements].map((el) => {
+                const fullName = el.innerText.trim();
+                const lastName = fullName.split(" ").pop().trim().toLowerCase();
+                return lastName;
+            });
+
+            // Navigate to the last page
+            cy.get(Pagination.allPages).find('li').eq(-2).click();
+
+            // Extract, trim, and normalize case of last names from the last page
+            cy.get(TeamPage.employeeName).then(($lastPageNameElements) => {
+                const lastPageLastNames = [...$lastPageNameElements].map((el) => {
+                    const fullName = el.innerText.trim();
+                    const lastName = fullName.split(" ").pop().trim().toLowerCase();
+                    return lastName;
+                });
+
+                // Combine last names from both pages
+                const combinedLastNames = [...firstPageLastNames, ...lastPageLastNames];
+
+                // Sort the combined last names in descending order (Z-A)
+                const sortedCombinedLastNamesDesc = [...combinedLastNames].sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }));
+
+                // Join the unsorted and sorted names into text for comparison
+                const unsortedText = combinedLastNames.join(" ");
+                const sortedText = sortedCombinedLastNamesDesc.join(" ");
+
+                // Log strings for debugging purposes
+                cy.log("Combined Unsorted Last Names Text:", unsortedText);
+                cy.log("Combined Sorted (Desc) Last Names Text:", sortedText);
+
+                // Verify that the combined list is sorted in descending order
+                expect(unsortedText).to.equal(sortedText);
+            });
+        });
+    });
+
+
 
 })
