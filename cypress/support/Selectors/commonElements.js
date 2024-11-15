@@ -14,12 +14,16 @@ export const Widgets = {
     jiraWidget: '[data-cy="jira-widget"]',
     calendarWidget: '[data-cy="calendar-widget"]',
     positionWidget: '[data-cy="assignment-widget"]',
+    chatWidget: '[data-cy="chat-widget"]',
+    lookerWidget: '[data-cy="looker-widget"]',
+    camundaWidget: '[data-cy="camunda-widget"]',
     moreBtnWidget: '[id="more"]',
     menuItem: '[role="menuitem"]',
+    pin: '[id="pin"]',
     dialogWidgetSize: '[role="dialog"]',
-    smallSize: '[class="MuiBox-root css-walyej"]',
-    mediumSize: '[class="MuiBox-root css-walyej"]',
-    hugeSize: '[class="MuiBox-root css-walyej"]'
+    smallSize: '[data-cy="change-size-to-small"]',
+    mediumSize: '[data-cy="change-size-to-medium"]',
+    hugeSize: '[data-cy="change-size-to-large"]'
 }
 
 export  const blackArea = {
