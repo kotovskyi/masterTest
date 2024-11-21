@@ -26,14 +26,15 @@
 
 const axios = require('axios');
 
-Cypress.Commands.add('dragAndDrop', (dragLocator, dropLocator) => {
+Cypress.Commands.add('dragAndDrop', (dragLocator, dropLocator,a,b) => {
     cy.get(dragLocator)
         .realMouseDown({ button: 'left', position: 'center' }) // Press down on the element
-        .realMouseMove(0, 100, { position: 'center' })         // Move mouse down slightly to initiate drag
+        .realMouseMove(0, 0, { position: 'center' })         // Move mouse down slightly to initiate drag
         .wait(200);                                            // Wait for smooth dragging
 
     cy.get(dropLocator)
-        .realMouseMove(1, 1, { position: 'center' })           // Move mouse to the target element
+        .realMouseMove(a, b, { position: 'center' })
+        // Move mouse to the target element
         .realMouseUp();                                        // Release mouse
 });
 

@@ -14,6 +14,7 @@ describe('Move widgets using DnD', () => {
             win.localStorage.setItem('onboarding_team_passed', JSON.stringify(true));
             win.localStorage.setItem('onboarding_mesh_passed', JSON.stringify(true));
             win.localStorage.setItem('onboarding_profile_passed', JSON.stringify(true));
+
         });
 
     })
@@ -27,84 +28,206 @@ describe('Move widgets using DnD', () => {
             return false
         })
         cy.visit('/');
-
     });
-    it('Drag widget (small size widget) diagonally.', () => {
+    it('Drag widget (small size widget) diagonally and verify widget positions.', () => {
+        // Store initial widget positions
+        cy.wait(1000)
+        getWidgetPositions().then((initialPositions) => {
+            const {jira, calendar, camunda, ...otherWidgets} = initialPositions;
 
-        // Change widget size on small
-        cy.get(Widgets.jiraWidget).find(Widgets.moreBtnWidget).click()
-        cy.contains(Widgets.menuItem, 'Змінити розмір').click()
-        cy.get(Widgets.dialogWidgetSize).should('exist')
-        cy.get(Widgets.smallSize).click()
-        cy.contains('[type="button"]', 'Редагувати').click();
+            // Change Jira Widget size to small
+            cy.get(Widgets.jiraWidget).find(Widgets.moreBtnWidget).click();
+            cy.contains(Widgets.menuItem, 'Змінити розмір').click();
+            cy.get(Widgets.dialogWidgetSize).should('exist');
+            cy.get(Widgets.smallSize).click();
+            cy.contains('[type="button"]', 'Редагувати').click();
 
-        captureWidgetPosition(Widgets.jiraWidget).then((pos) => {
-            initialPosition = pos;
-        });
-        // Capture initial position of the Google Calendar widget
-        captureWidgetPosition(Widgets.calendarWidget).then((pos) => {
-            initialWidgetPosition = pos;
-        });
-        // Move small Jira widget
-        cy.dragAndDrop(Widgets.jiraWidget, Widgets.calendarWidget);
-        cy.contains('Готово').click()
+            // Drag the small Jira widget diagonally to the position of Google Calendar widget
+                cy.get(Widgets.jiraWidget)
+                    .realMouseDown({ button: 'left', position: 'center' }) // Press down on the element
+                    .realMouseMove(0, 100, { position: 'center' })         // Move mouse down slightly to initiate drag
+                    .wait(200);                                            // Wait for smooth dragging
 
-        // Verify new position of Jira widget
-        cy.get(Widgets.jiraWidget).then(($widget) => {
-            const {top, left} = $widget[0].getBoundingClientRect();
-            // Optionally, verify specific movement direction or amount if needed
-            expect(top).to.be.greaterThan(initialPosition.top);  // Check if moved downward
-            expect(left).to.be.lessThan(initialPosition.left);     // Verify it moved leftward
-        });
-        // Verify new position of the Google Calendar widget
-        cy.get(Widgets.calendarWidget).then(($widget) => {
-            const {top, left} = $widget[0].getBoundingClientRect();
-            // Ensure the Google Calendar widget has moved down
-            expect(top).to.be.greaterThan(initialWidgetPosition.top); // Verify it moved downward
-            expect(left).to.equal(initialWidgetPosition.left);        // Verify it stayed in the same horizontal position
-        });
+                cy.get(Widgets.calendarWidget)
+                    .realMouseMove(1, 1, { position: 'center' })
+                    // Move mouse to the target element
+                    .realMouseUp();                                        // Release mouse
 
+            cy.contains('Готово').click();
+
+            // Capture new widget positions after the drag-and-drop operation
+            getWidgetPositions().then((newPositions) => {
+                const {jira: newJira, calendar: newCalendar, camunda: newCamunda, ...newOtherWidgets} = newPositions;
+
+                // Assert unchanged positions for widgets other than Jira, Calendar, and Camunda
+                assertWidgetPositionEquality(otherWidgets, newOtherWidgets, Object.keys(otherWidgets));
+
+                // Validate the Jira widget has moved down and left
+                expect(newJira.top, 'Jira widget should move downward').to.be.greaterThan(jira.top);
+                expect(newJira.left, 'Jira widget should move leftward').to.be.lessThan(jira.left);
+
+                // Validate the Calendar widget has moved down but remained in the same horizontal position
+                expect(newCalendar.top, 'Calendar widget should move downward').to.be.greaterThan(calendar.top);
+                expect(newCalendar.left, 'Calendar widget should remain in the same horizontal position').to.equal(calendar.left);
+
+                // Validate the Camunda widget has moved appropriately
+                expect(newCamunda.top, 'Camunda widget top position should change').to.not.equal(camunda.top);
+                expect(newCamunda.left, 'Camunda widget left position should change').to.equal(camunda.left);
+            });
+        });
     });
-    it('Drag widget (small size widget) vertically.', () => {
+    it('Swap positions of Jira and Camunda widgets and verify positions.', () => {
 
-        cy.contains('[type="button"]', 'Редагувати').click();
+        cy.window().then((win) => {
+            win.localStorage.setItem('widgets', Cypress.env("standartWidgetPositions"));
+            win.localStorage.setItem('grid-layouts', Cypress.env("gridPositions"));
 
-        captureWidgetPosition(Widgets.jiraWidget).then((pos) => {
-            initialPosition = pos;
         });
-        // Capture initial position of the Google Calendar widget
-        captureWidgetPosition(Widgets.positionWidget).then((pos) => {
-            initialWidgetPosition = pos;
+        cy.reload();
+        cy.wait(2000);
+
+        // Store initial widget positions
+        getWidgetPositions().then((initialPositions) => {
+            const {jira, camunda, ...otherWidgets} = initialPositions;
+
+            // Edit mode for widgets
+            cy.contains('[type="button"]', 'Редагувати').click();
+
+            // Drag Jira widget to the position of Camunda widget
+            cy.dragAndDrop(Widgets.jiraWidget, Widgets.camundaWidget,30,30);
+            cy.contains('Готово').click();
+
+            // Capture new widget positions after the drag-and-drop operation
+            getWidgetPositions().then((newPositions) => {
+                const {jira: newJira, camunda: newCamunda, ...newOtherWidgets} = newPositions;
+
+                // Assert unchanged positions for widgets other than Jira and Camunda
+                assertWidgetPositionEquality(otherWidgets, newOtherWidgets, Object.keys(otherWidgets));
+
+                // Validate the Jira widget has moved to Camunda's original position
+                expect(newJira.top, 'Jira widget should move to Camunda position').to.equal(camunda.top);
+                expect(newJira.left, 'Jira widget should stay in the same horizontal position as Camunda').to.equal(camunda.left);
+
+                // Validate the Camunda widget has moved to Jira's original position
+                expect(newCamunda.top, 'Camunda widget should move to Jira position').to.equal(jira.top);
+                expect(newCamunda.left, 'Camunda widget should stay in the same horizontal position as Jira').to.equal(jira.left);
+            });
         });
-        // Move small Jira widget
-        cy.dragAndDrop(Widgets.jiraWidget, Widgets.positionWidget);
-        cy.contains('Готово').click()
+    });
+    it('Drag Jira widget (medium size) below Google Calendar widget and swap with Camunda widget, ensuring only Jira and Camunda positions change.', () => {
+        // Set initial widget positions from environment variable
+        cy.window().then((win) => {
+            win.localStorage.setItem('widgets', Cypress.env("standartWidgetPositions"));
+            win.localStorage.setItem('grid-layouts', Cypress.env("gridPositions"));
 
-        // Verify new position of the Jira widget
-        cy.get(Widgets.jiraWidget).then(($widget) => {
-            const {top, left} = $widget[0].getBoundingClientRect();
-
-            // Check if it moved horizontally left but did not move vertically
-            expect(left).to.be.lessThan(initialPosition.left); // Moved leftward
-            expect(top).to.be.lessThan(initialPosition.top);   // Moved upward
         });
+        cy.reload();
+        cy.wait(2000);
 
-        // Verify new position of the Team widget
-        cy.get(Widgets.positionWidget).then(($widget) => {
-            const {top, left} = $widget[0].getBoundingClientRect();
+        // Store initial widget positions
+        getWidgetPositions().then((initialPositions) => {
+            const {jira, calendar, camunda, ...otherWidgets} = initialPositions;
 
-            // Ensure the Team widget did not move in any direction
-            expect(top).to.greaterThan(initialWidgetPosition.top);  // No vertical movement
-            expect(left).to.equal(initialWidgetPosition.left); // No horizontal movement
+            // Change Jira widget size to medium
+            cy.get(Widgets.jiraWidget).find(Widgets.moreBtnWidget).click();
+            cy.contains(Widgets.menuItem, 'Змінити розмір').click();
+            cy.get(Widgets.dialogWidgetSize).should('exist');
+            cy.get(Widgets.mediumSize).click();
+
+            // Enable edit mode for widgets
+            cy.contains('[type="button"]', 'Редагувати').click();
+
+            // Drag Jira widget to a position below the Google Calendar widget
+            cy.dragAndDrop(Widgets.jiraWidget, Widgets.calendarWidget,1,1);
+            cy.contains('Готово').click();
+
+            // Capture new widget positions after the drag-and-drop operation
+            getWidgetPositions().then((newPositions) => {
+                const {jira: newJira, calendar: newCalendar, camunda: newCamunda, ...newOtherWidgets} = newPositions;
+
+                // Assert unchanged positions for all widgets except Jira and Camunda
+                assertWidgetPositionEquality(otherWidgets, newOtherWidgets, Object.keys(otherWidgets));
+
+                // Validate that Jira widget has moved downward and is below the Google Calendar widget
+                expect(newJira.top, 'Jira widget should move downward below the Calendar widget').to.be.eq(calendar.top);
+                expect(newJira.left, 'Jira widget should remain in the same horizontal position as Calendar widget').to.equal(calendar.left);
+
+                // Validate that Camunda widget has taken the position of the Jira widget
+                expect(newCamunda.top, 'Camunda widget should take the position of Jira widget').to.equal(jira.top);
+                expect(newCamunda.left, 'Camunda widget should remain in the same horizontal position as Jira widget').to.equal(jira.left);
+
+                // Ensure that the Calendar widget's position remains unchanged
+                expect(newCalendar.top, 'Calendar widget position should remain unchanged').to.greaterThan(calendar.top);
+                expect(newCalendar.left, 'Calendar widget left position should remain unchanged').to.equal(calendar.left);
+            });
         });
-    })
+    });
+    it('Drag huge size Jira widget horizontally and ensure Camunda, Jira, and Looker change positions as expected.', () => {
+        // Set initial widget positions from environment variable
+        cy.window().then((win) => {
+            win.localStorage.setItem('widgets', Cypress.env("standartWidgetPositions"));
+            win.localStorage.setItem('grid-layouts', Cypress.env("gridPositions"));
+        });
+        cy.reload();
+        cy.wait(2000);
+
+        // Store initial widget positions
+        getWidgetPositions().then((initialPositions) => {
+            const {jira, team, camunda, looker, ...otherWidgets} = initialPositions;
+
+            // Capture initial positions of Jira, Camunda, Team, and Looker widgets
+            const initialJiraPosition = jira;
+            const initialCamundaPosition = camunda;
+            const initialTeamPosition = team;
+            const initialLookerPosition = looker;
+
+            // Change Jira widget size to huge
+            cy.get(Widgets.jiraWidget).find(Widgets.moreBtnWidget).click();
+            cy.contains(Widgets.menuItem, 'Змінити розмір').click();
+            cy.get(Widgets.dialogWidgetSize).should('exist');
+            cy.get(Widgets.hugeSize).click();
+
+            // Enable edit mode for widgets
+            cy.contains('[type="button"]', 'Редагувати').click();
+
+            // Move huge Jira widget horizontally to the position of Camunda widget
+            cy.dragAndDrop(Widgets.jiraWidget, Widgets.teamWidget, 50, 1);
+            cy.contains('Готово').click();
+
+            // Capture new widget positions after the drag-and-drop operation
+            getWidgetPositions().then((newPositions) => {
+                const {jira: newJira, camunda: newCamunda, team: newTeam, looker: newLooker, ...newOtherWidgets} = newPositions;
+
+                // Assert unchanged positions for all widgets except Jira, Camunda, and Looker
+                assertWidgetPositionEquality(otherWidgets, newOtherWidgets, Object.keys(otherWidgets));
+
+                // Validate that the Camunda widget moved to Jira widget's position
+                expect(newCamunda.top, 'Camunda widget should move to Jira\'s position').to.equal(initialJiraPosition.top);
+                expect(newCamunda.left, 'Camunda widget should move horizontally to Jira\'s position').to.equal(initialJiraPosition.left);
+
+                // Validate that the Jira widget moved to Team widget's position
+                expect(newJira.top, 'Jira widget should move to Team\'s position').to.equal(initialTeamPosition.top);
+                expect(newJira.left, 'Jira widget should move horizontally to Team\'s position').to.equal(initialTeamPosition.left);
+
+                // Ensure the Team widget's position is changed vertically
+                expect(newTeam.top, 'Team widget position should remain unchanged').to.greaterThan(initialTeamPosition.top);
+                expect(newTeam.left, 'Team widget left position should remain unchanged').to.equal(initialTeamPosition.left);
+
+                // Ensure Looker widget moved to vertically
+                expect(newLooker.top, 'Looker widget should move to a new position').to.greaterThan(initialLookerPosition.top);
+                expect(newLooker.left, 'Looker widget should move to a new position').to.equal(initialLookerPosition.left);
+            });
+        });
+    });
     it('Check that widget pin cause move widget up', () => {
         // Set the initial widget positions from environment variable
         cy.window().then((win) => {
             win.localStorage.setItem('widgets', Cypress.env("standartWidgetPositions"));
+            win.localStorage.setItem('grid-layouts', Cypress.env("gridPositions"));
+
         });
-        cy.reload()
-        cy.wait(2000)
+        cy.reload();
+        cy.wait(2000);
         // Store initial widget positions
         getWidgetPositions().then((initialPositions) => {
             const {jira, calendar, position, chat, camunda, looker, profile, team} = initialPositions;
@@ -140,9 +263,11 @@ describe('Move widgets using DnD', () => {
         // Set the initial widget positions from environment variable
         cy.window().then((win) => {
             win.localStorage.setItem('widgets', Cypress.env("standartWidgetPositions"));
+            win.localStorage.setItem('grid-layouts', Cypress.env("gridPositions"));
+
         });
         cy.reload();
-        cy.wait(1000)
+        cy.wait(2000);
 
         // Store initial widget positions
         getWidgetPositions().then((initialPositions) => {
@@ -178,6 +303,8 @@ describe('Move widgets using DnD', () => {
         // Set the initial widget positions from environment variable
         cy.window().then((win) => {
             win.localStorage.setItem('widgets', Cypress.env("standartWidgetPositions"));
+            win.localStorage.setItem('grid-layouts', Cypress.env("gridPositions"));
+
         });
         cy.reload();
         cy.wait(2000);
@@ -221,77 +348,7 @@ describe('Move widgets using DnD', () => {
         });
     });
 
-    it('Drag widget (medium size widget) diagonally.', () => {
-        cy.window().then((win) => {
-            win.localStorage.setItem('widgets', Cypress.env("standartWidgetPositions"));
-        });
-        // Chage widget size on small
-        cy.get(Widgets.jiraWidget).find(Widgets.moreBtnWidget).click()
-        cy.contains(Widgets.menuItem, 'Змінити розмір').click()
-        cy.get(Widgets.dialogWidgetSize).should('exist')
-        cy.get(Widgets.mediumSize).eq(1).click()
-        cy.contains('[type="button"]', 'Редагувати').click();
 
-        captureWidgetPosition(Widgets.jiraWidget).then((pos) => {
-            initialPosition = pos;
-        });
-        // Capture initial position of the Google Calendar widget
-        captureWidgetPosition(Widgets.calendarWidget).then((pos) => {
-            initialWidgetPosition = pos;
-        });
-        // Move small Jira widget
-        cy.dragAndDrop(Widgets.jiraWidget, Widgets.calendarWidget);
-        cy.contains('Готово').click()
-
-        // Verify new position of Jira widget
-        cy.get(Widgets.jiraWidget).then(($widget) => {
-            const {top, left} = $widget[0].getBoundingClientRect();
-            // Optionally, verify specific movement direction or amount if needed
-            expect(top).to.be.greaterThan(initialPosition.top);  // Check if moved downward
-            expect(left).to.be.lessThan(initialPosition.left);     // Verify it moved leftward
-        });
-        // Verify new position of the Google Calendar widget
-        cy.get(Widgets.calendarWidget).then(($widget) => {
-            const {top, left} = $widget[0].getBoundingClientRect();
-            // Ensure the Google Calendar widget has moved down
-            expect(top).to.be.greaterThan(initialWidgetPosition.top); // Verify it moved downward
-            expect(left).to.equal(initialWidgetPosition.left);        // Verify it stayed in the same horizontal position
-        });
-    });
-    it('Drag widget (huge size widget) vertically.', () => {
-        // Chage widget size on small
-        cy.get(Widgets.jiraWidget).find(Widgets.moreBtnWidget).click()
-        cy.contains(Widgets.menuItem, 'Змінити розмір').click()
-        cy.get(Widgets.dialogWidgetSize).should('exist')
-        cy.get(Widgets.hugeSize).eq(0).click()
-        cy.contains('[type="button"]', 'Редагувати').click();
-
-        captureWidgetPosition(Widgets.jiraWidget).then((pos) => {
-            initialPosition = pos;
-        });
-        // Capture initial position of the Team widget
-        captureWidgetPosition(Widgets.teamWidget).then((pos) => {
-            initialWidgetPosition = pos;
-        });
-        // Move small Jira widget
-        cy.dragAndDrop(Widgets.jiraWidget, Widgets.teamWidget);
-        cy.contains('Готово').click()
-
-        // Verify new position of Jira widget
-        cy.get(Widgets.jiraWidget).then(($widget) => {
-            const {top, left} = $widget[0].getBoundingClientRect();
-            // Optionally, verify specific movement direction or amount if needed
-            expect(top).to.be.equal(initialPosition.top);  // Check if moved downward
-            expect(left).to.be.lessThan(initialPosition.left);     // Verify it moved leftward
-        });
-        // Verify new position of the Team widget
-        cy.get(Widgets.teamWidget).then(($widget) => {
-            const {top, left} = $widget[0].getBoundingClientRect();
-            // Ensure the Google Calendar widget has moved down
-            expect(top).to.be.greaterThan(initialWidgetPosition.top);
-            expect(left).to.equal(initialWidgetPosition.left);
-        });
-    });
 
 
 })
