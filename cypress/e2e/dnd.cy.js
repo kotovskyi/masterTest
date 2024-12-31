@@ -235,7 +235,7 @@ describe('Move widgets using DnD', () => {
 
             // Click on the 'more' button and 'pin' option for chat widget
             cy.get(Widgets.chatWidget).find(Widgets.moreBtnWidget).click();
-            cy.contains(Widgets.menuItem, 'Закріпити').click();
+            cy.contains(Widgets.menuItem, 'Прикріпити').click();
 
             // Check if the color of the pin button changes
             cy.get(Widgets.chatWidget).find(Widgets.pin).should('have.css', 'color', 'rgb(213, 57, 57)');
@@ -317,7 +317,7 @@ describe('Move widgets using DnD', () => {
             const widgetsToPin = ['position', 'profile', 'team', 'jira'];
             widgetsToPin.forEach((widget) => {
                 cy.get(Widgets[`${widget}Widget`]).find(Widgets.moreBtnWidget).click();
-                cy.contains(Widgets.menuItem, 'Закріпити').click();
+                cy.contains(Widgets.menuItem, 'Прикріпити').click();
             });
 
             // Verify pin button color changes for pinned widgets

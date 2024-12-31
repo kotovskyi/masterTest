@@ -7,22 +7,23 @@ const testname = `testname${id}`
 import {generateRandomDate,generateUUID } from '../support/utils';
 
 const positionNames = {
-    "ba": "8a343464-ac50-44c7-b672-ce4740648884",
+    "ba": "90ac376b-7126-4559-9402-9ad14b34d3be",
     "cok": "c264d81b-d540-4298-8ae9-15206a898f23",
-    "QA": "01690fbc-8d16-4b8a-8396-2ad70e763389",
+    "QA": "4cef65fa-d1c2-46bc-b444-445c33d3feb4",
     "programmer": "1cef65fa-d1c4-46bc-b444-445c33d3f111",
     "designer": "2def65fa-d1c4-46bc-b444-445c33d3f133"
 }
 const workGroupFestCloud = {
-    "qa": "4cef65fa-d1c2-46bc-b444-445c33d3feb4",
+    "qa": "01690fbc-8d16-4b8a-8396-2ad70e763389",
     "ux/ua": "0a76157f-791e-4a46-92ca-144011efcf7f",
     "ba": "b176157f-791e-4a46-92ca-144011efc222",
-    "frontend": "7cef65fa-d1c4-46bc-b444-445c33d3feb5"
+    "frontend": "7cef65fa-d1c4-46bc-b444-445c33d3feb5",
+    "test": "0cef00fa-d1c3-00bc-b444-445c33d3feb1"
 }
 
 describe('Database Query Tests', () => {
     before(() => {
-        googleLogin()
+        //googleLogin()
     })
 
     const url = Cypress.env('linkHasuraDev');
@@ -130,8 +131,8 @@ describe('Database Query Tests', () => {
             });
     })
     it.skip('Update name of workgroup', () => {
-        const workgroupFestCloudId = "66c9a63e-2071-4d5d-ae0c-046b16d5022d"
-        const newGroupName = "newNanedGroup"
+        const workgroupFestCloudId = "0cef00fa-d1c3-00bc-b444-445c33d3feb1"
+        const newGroupName = "Test"
         requestToDb.updateWorkgroupName(url, token, workgroupFestCloudId ,newGroupName)
             .then((response) => {
                 // Verify the status code if needed

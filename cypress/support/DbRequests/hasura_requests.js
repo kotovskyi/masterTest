@@ -44,6 +44,9 @@ class requestToDb {
             url: url,
             body: {
                 query: `mutation MyMutation4 {
+                insert_people_principal(objects: {festcloudid: "${festCloudId}"}) {
+    affected_rows
+  }
   insert_people_person(objects: {festcloudid: "${festCloudId}", familyname: "${familyName}", name: "${name}", gender: "${gender}", dayofbirth: "${dayofbirth}", birthday: "${birthday}", middlename: "${middlename}", mobilephone: "${mobilePhone}"}) {
     affected_rows
   }
