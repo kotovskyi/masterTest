@@ -207,5 +207,49 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.update_people_assignment).to.have.property('affected_rows', 1);
             });
     })
+    it.only('Create 10 tasks for user', () => {
+        // Функції для генерації випадкових значень
+        function generateRandomTenDigitNumber() {
+            return Math.floor(Math.random() * 9000000000) + 1000000000;
+        }
+
+        const priority = ['Low', 'Medium', 'High'];
+        function getRandomPriority() {
+            const randomIndex = Math.floor(Math.random() * priority.length);
+            return priority[randomIndex];
+        }
+
+        const status = ['To Do', 'In Progress'];
+        function getRandomStatus() {
+            const randomIndex = Math.floor(Math.random() * status.length);
+            return status[randomIndex];
+        }
+        const aplicationType = ['JIRA', 'CAMUNDA'];
+
+// Функція для отримання випадкового елемента з масиву
+        function getRandomApplicationType() {
+            const randomIndex = Math.floor(Math.random() * aplicationType.length);
+            return aplicationType[randomIndex];
+        }
+        // Генерація 10 тасок
+        for (let i = 0; i < 17; i++) {
+            const festCloudId = generateUUID(); // Генерація UUID для кожного таска
+            const title = `Title${id}_${i}`; // Унікальний заголовок для кожної задачі
+            const taskid = generateRandomTenDigitNumber(); // Генерація випадкового 10-значного ID
+            const priorityValue = getRandomPriority(); // Рандомний пріоритет
+            const statusValue = getRandomStatus(); // Рандомний статус
+            const aplicationTypeValue = getRandomApplicationType()
+            // Виконання запиту для кожної задачі
+            requestToDb.insertPeopleTask(url, token, festCloudId, title, aplicationTypeValue, taskid, priorityValue, statusValue)
+                .then((response) => {
+                    // Перевірки на правильність відповіді
+                    expect(response.status).to.eq(200);
+                    expect(response.body).to.have.property('data');
+                    expect(response.body.data).to.have.property('insert_people_task');
+                    expect(response.body.data.insert_people_task).to.have.property('affected_rows', 1);
+                });
+        }
+    });
+
 
 })

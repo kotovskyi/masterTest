@@ -300,5 +300,37 @@ class requestToDb {
             }
         });
     }
+    static insertPeopleTask (url, bearerToken, festcloudid,title, aplicationTypeValue, taskid, priority, status){
+        return cy.request({
+            method: 'POST',
+            url: url,
+            body: {
+                query: `mutation MyMutation {
+  insert_people_task(
+    objects: {
+      reporterfestcloudid: "a64eddbf-9d00-459a-82a7-f6b78e18621e",
+      assigneefestcloudid: "a64eddbf-9d00-459a-82a7-f6b78e18621e",
+      createddate: "2024-11-17T11:41:07.16554",
+      domain: "https://camunda-tasklist.srv.festcloud.ai/4503599641471321",
+      festcloudid:  "${festcloudid}",
+      title: "${title}",
+      description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. https://meta4.festcloud.ai/auth/sign-in Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+      sourcesystem: "${aplicationTypeValue}",
+      taskid: "${taskid}",
+      duedate: "2024-02-28T13:12:37.704951",
+      priority: "${priority}",
+      status: "${status}"
+    }
+  ) {
+    affected_rows
+  }
+}`
+            },
+            headers: {
+                'authorization': `Bearer ${bearerToken}`,
+                'x-hasura-admin-secret': 'test-secret'
+            }
+        });
+    }
 }
 export default requestToDb;
