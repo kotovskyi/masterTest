@@ -1,4 +1,4 @@
-import requestToDb from "../support/DbRequests/hasura_requests";
+import requestToUatDb from "../support/DbRequests/uat_requests";
 import {googleLogin} from '../support/login';
 import {users,  usersDel} from '../fixtures/usersData';
 const uuid = () => Cypress._.random(0, 1e6)
@@ -7,18 +7,15 @@ const testname = `testname${id}`
 import {generateRandomDate,generateUUID } from '../support/utils';
 
 const positionNames = {
-    "ba": "90ac376b-7126-4559-9402-9ad14b34d3be",
-    "cok": "c264d81b-d540-4298-8ae9-15206a898f23",
-    "QA": "4cef65fa-d1c2-46bc-b444-445c33d3feb4",
-    "programmer": "1cef65fa-d1c4-46bc-b444-445c33d3f111",
-    "designer": "2def65fa-d1c4-46bc-b444-445c33d3f133"
+    "ba": "",
+    "cok": "",
+    "QA": "",
+    "programmer": "f7b04d31-24fe-4666-8e4b-8279e00c2c00",
+    "designer": ""
 }
 const workGroupFestCloud = {
-    "qa": "01690fbc-8d16-4b8a-8396-2ad70e763389",
-    "ux/ua": "0a76157f-791e-4a46-92ca-144011efcf7f",
-    "ba": "b176157f-791e-4a46-92ca-144011efc222",
-    "frontend": "7cef65fa-d1c4-46bc-b444-445c33d3feb5",
-    "test": "0cef00fa-d1c3-00bc-b444-445c33d3feb1"
+
+    "meta4":"54df5a6b-62cb-443b-920a-d8c9b212f912"
 }
 
 describe('Database Query Tests', () => {
@@ -26,11 +23,10 @@ describe('Database Query Tests', () => {
         //googleLogin()
     })
 
-    const url = Cypress.env('linkHasuraDev');
-    const token = Cypress.env('bearerToken');
-    //const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiaHR0cHM6Ly9oYXN1cmEuaW8vand0L2NsYWltcyI6eyJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJwZW9wbGUtZGV2IiwieC1oYXN1cmEtYWxsb3dlZC1yb2xlcyI6WyJwZW9wbGUtZGV2Il19fQ.uasv9WhJVZDlbHGFxj8QLSIofalFuqUAnnO96a5baTA';
+    const url = "https://hasura-uat.srv.festcloud.ai/v1/graphql";
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiaHR0cHM6Ly9oYXN1cmEuaW8vand0L2NsYWltcyI6eyJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJwZW9wbGUtZGV2IiwieC1oYXN1cmEtYWxsb3dlZC1yb2xlcyI6WyJwZW9wbGUtZGV2Il19fQ.uasv9WhJVZDlbHGFxj8QLSIofalFuqUAnnO96a5baTA';
 
-    it.skip('Insert users in devDB', () => {
+    it.only('Insert users in devDB', () => {
 
         // Пройдемо по кожному користувачу в масиві
         users.forEach(user => {
@@ -39,7 +35,7 @@ describe('Database Query Tests', () => {
             let dayofbirth = randomDate.date
             let employeeFestCloudId = festCloudId
             let birthday = randomDate.birthday
-            requestToDb.insertPerson(url, token, festCloudId, user.familyName, user.name, user.gender, dayofbirth, birthday, user.middlename, user.mobilePhone).then((response) => {
+            requestToUatDb.insertPerson(url, token, festCloudId, user.familyName, user.name, user.gender, birthday, user.middlename, user.mobilePhone, user.workEmail).then((response) => {
                 // Verify the status code if needed
                 expect(response.status).to.eq(200);
                 // Verify the structure of the response
@@ -48,7 +44,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.insert_people_person).to.have.property('affected_rows', 1);
 
             });
-            requestToDb.insertEmployee(url, token, user.workEmail, festCloudId, user.workMobilephone).then((response) => {
+            requestToUatDb.insertEmployee(url, token, user.workEmail, festCloudId, user.workMobilephone).then((response) => {
                 expect(response.status).to.eq(200);
                 // Verify the structure of the response
                 expect(response.body).to.have.property('data');
@@ -56,7 +52,7 @@ describe('Database Query Tests', () => {
                 expect(response.body.data.insert_people_employee).to.have.property('affected_rows', 1);
 
             });
-            requestToDb.insertAssignment(url, token, festCloudId, positionNames.QA, workGroupFestCloud.qa, employeeFestCloudId).then((response) => {
+            requestToUatDb.insertAssignment(url, token, festCloudId, positionNames.programmer, workGroupFestCloud.meta4, employeeFestCloudId).then((response) => {
                 expect(response.status).to.eq(200);
                 // Verify the structure of the response
                 expect(response.body).to.have.property('data');

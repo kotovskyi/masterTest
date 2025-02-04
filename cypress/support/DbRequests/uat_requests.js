@@ -1,4 +1,4 @@
-class requestToDb {
+class requestToUatDb {
     static uniqUserByName(url, operationName, query, searchItem, bearerToken) {
         return cy.request({
             method: 'POST',
@@ -38,16 +38,16 @@ class requestToDb {
         });
     }
 
-    static insertPerson(url, bearerToken, festCloudId,familyName,name,gender,dayofbirth,birthday,middlename,mobilePhone){
+    static insertPerson(url, bearerToken, festCloudId,familyName,name,gender,birthday,middlename,mobilePhone,email){
         return cy.request({
             method: 'POST',
             url: url,
             body: {
                 query: `mutation MyMutation4 {
-                insert_people_principal(objects: {festcloudid: "${festCloudId}"}) {
+                insert_people_principal(objects: {FestCloudID: "${festCloudId}"}) {
     affected_rows
   }
-  insert_people_person(objects: {festcloudid: "${festCloudId}", familyname: "${familyName}", name: "${name}", gender: "${gender}", dayofbirth: "${dayofbirth}", birthday: "${birthday}", middlename: "${middlename}", mobilephone: "${mobilePhone}"}) {
+  insert_people_person(objects: {FestCloudID: "${festCloudId}", FamilyName: "${familyName}", Name: "${name}", Gender: "${gender}", Birthday: "${birthday}", MiddleName: "${middlename}", MobilePhone: "${mobilePhone}", Email: "${email}"}) {
     affected_rows
   }
 }`
@@ -55,7 +55,6 @@ class requestToDb {
             },
             headers: {
                 'authorization': `Bearer ${bearerToken}`,
-                'x-hasura-admin-secret': 'test-secret'
             }
         });
     }
@@ -66,14 +65,13 @@ class requestToDb {
             body: {
                 query: `mutation MyMutation4 {
  
-  insert_people_employee(objects: {workemail: "${workEmail}", festcloudid: "${festCloudId}", workmobilephone: "${workMobilephone}"}) {
+  insert_people_employee(objects: {WorkEmail: "${workEmail}", FestCloudID: "${festCloudId}", WorkMobilePhone: "${workMobilephone}"}) {
     affected_rows
   }
 }`
             },
             headers: {
                 'authorization': `Bearer ${bearerToken}`,
-                'x-hasura-admin-secret': 'test-secret'
             }
         });
     }
@@ -83,14 +81,13 @@ class requestToDb {
             url: url,
             body: {
                 query: `mutation MyMutation4 {
-  insert_people_assignment(objects: {festcloudid: "${festCloudId}", startdate: "2018-12-25T05:30:00", positionfestcloudid: "${positionFestCloudId}", workgroupfestcloudid: "${workGroupFestCloudId}", employeefestcloudid: "${employeeFestCloudId}"}) {
+  insert_people_assignment(objects: {FestCloudID: "${festCloudId}", StartDate: "2018-12-25T05:30:00", PositionFestCloudID: "${positionFestCloudId}", WorkgroupFestCloudID: "${workGroupFestCloudId}", EmployeeFestCloudID: "${employeeFestCloudId}"}) {
     affected_rows
   }
 }`
-    },
+            },
             headers: {
                 'authorization': `Bearer ${bearerToken}`,
-                'x-hasura-admin-secret': 'test-secret'
             }
         });
     }
@@ -99,7 +96,7 @@ class requestToDb {
             method: 'POST',
             url: url,
             body: {
-                    "query": `query MyQuery {
+                "query": `query MyQuery {
                         people_employee(where: {workemail: {_eq: "${workEmail}"}}) {
                             festcloudid
                         }
@@ -333,4 +330,4 @@ class requestToDb {
         });
     }
 }
-export default requestToDb;
+export default requestToUatDb;

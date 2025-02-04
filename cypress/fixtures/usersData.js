@@ -1,12 +1,12 @@
 export const users = [
     {
-        familyName: "Maksym",
-        name: "Kotovskyi",
-        middlename: "Oleksiyjovych",
-        gender: "Чоловічий",
-        workEmail: "maksym.kotovskyi@festcloud.ai",
-        mobilePhone: "+380 63 456 23 57",
-        workMobilephone: "+380 456 23 57"
+        familyName: " Serban",
+        name: "Olesia",
+        middlename: "Batkivna",
+        gender: "Жіночий",
+        workEmail: "olesia.serban@festcloud.ai",
+        mobilePhone: "+380688392707",
+        workMobilephone: "+380688392707"
     }
 ];
 
@@ -16,12 +16,12 @@ export const users = [
 
 export const usersDel = [
     {
-        familyName: "Лукавий",
-        name: "Дмитро",
-        middlename: "Степанович",
+        familyName: "Мислінський",
+        name: "Антон",
+        middlename: "Андрійович",
         gender: "Чоловічий",
-        workEmail: "dm.lukavyi@festcloud.ai",
-        mobilePhone: "+380961012358",
-        workMobilephone: "+380961012358"
+        workEmail: "anton.myslinskyi@festcloud.ai",
+        mobilePhone: "+380632156341",
+        workMobilephone: "+380632156341"
     }
 ];
