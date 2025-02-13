@@ -97,14 +97,13 @@ class requestToUatDb {
             url: url,
             body: {
                 "query": `query MyQuery {
-                        people_employee(where: {workemail: {_eq: "${workEmail}"}}) {
-                            festcloudid
+                        people_employee(where: {WorkEmail: {_eq: "${workEmail}"}}) {
+                            FestCloudID
                         }
                     }`
             },
             headers: {
                 'authorization': `Bearer ${bearerToken}`,
-                'x-hasura-admin-secret': 'test-secret'
             }
         });
     }
@@ -115,14 +114,13 @@ class requestToUatDb {
             url: url,
             body: {
                 query: `mutation MyMutation3 {
-  delete_people_assignment(where: {employeefestcloudid: {_eq: "${festCloudId}"}}) {
+  delete_people_assignment(where: {EmployeeFestCloudID: {_eq: "${festCloudId}"}}) {
     affected_rows
   }
 }`
             },
             headers: {
                 'authorization': `Bearer ${bearerToken}`,
-                'x-hasura-admin-secret': 'test-secret'
             }
         });
     }
@@ -132,14 +130,13 @@ class requestToUatDb {
             url: url,
             body: {
                 query: `mutation MyMutation3 {
-    delete_people_person(where: {festcloudid: {_eq: "${festCloudId}"}}) {
+    delete_people_person(where: {FestCloudID: {_eq: "${festCloudId}"}}) {
         affected_rows
     }
 }`
             },
             headers: {
                 'authorization': `Bearer ${bearerToken}`,
-                'x-hasura-admin-secret': 'test-secret'
             }
         });
     }

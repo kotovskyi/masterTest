@@ -26,7 +26,7 @@ describe('Database Query Tests', () => {
     const url = "https://hasura-uat.srv.festcloud.ai/v1/graphql";
     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMiwiaHR0cHM6Ly9oYXN1cmEuaW8vand0L2NsYWltcyI6eyJ4LWhhc3VyYS1kZWZhdWx0LXJvbGUiOiJwZW9wbGUtZGV2IiwieC1oYXN1cmEtYWxsb3dlZC1yb2xlcyI6WyJwZW9wbGUtZGV2Il19fQ.uasv9WhJVZDlbHGFxj8QLSIofalFuqUAnnO96a5baTA';
 
-    it.only('Insert users in devDB', () => {
+    it.skip('Insert users in devDB', () => {
 
         // Пройдемо по кожному користувачу в масиві
         users.forEach(user => {
@@ -61,25 +61,21 @@ describe('Database Query Tests', () => {
             });
         });
     });
-    it.skip('Delete users by email fromm devDB', () => {
-        const token = Cypress.env('bearerToken');
+    it.only('Delete users by email fromm devDB', () => {
         let FESTCloudId
         // Пройдемо по кожному користувачу в масиві
         usersDel.forEach(user => {
 
-            requestToDb.getUserByEmail(Cypress.env('linkHasuraDev'), token, user.workEmail).then((response) => {
+            requestToUatDb.getUserByEmail(url, token, user.workEmail).then((response) => {
                 cy.log(usersDel.workEmail)
 
-                cy.log(JSON.stringify(response.body.data.people_employee[0].festcloudid))
-                FESTCloudId = response.body.data.people_employee[0].festcloudid;
+                cy.log(JSON.stringify(response.body.data.people_employee[0].FestCloudID))
+                FESTCloudId = response.body.data.people_employee[0].FestCloudID;
 
-                // Log the festcloudid to the console
 
-                // Now you can use festcloudId as a parameter in other requests or functions
             }).then(()=>{
                 cy.log(`Festcloud ID: ${FESTCloudId}`);
-
-                requestToDb.deleteAssignment(Cypress.env('linkHasuraDev'), token, FESTCloudId).then((response) => {
+                requestToUatDb.deleteAssignment(url, token, FESTCloudId).then((response) => {
                     // Verify the status code if needed
                     expect(response.status).to.eq(200);
                     // Verify the structure of the response
@@ -88,7 +84,7 @@ describe('Database Query Tests', () => {
                     expect(response.body.data.delete_people_assignment).to.have.property('affected_rows', 1);
 
                 });
-                requestToDb.deletePerson(Cypress.env('linkHasuraDev'), token, FESTCloudId).then((response) => {
+                requestToUatDb.deletePerson(url, token, FESTCloudId).then((response) => {
                     // Verify the status code if needed
                     expect(response.status).to.eq(200);
                     // Verify the structure of the response
